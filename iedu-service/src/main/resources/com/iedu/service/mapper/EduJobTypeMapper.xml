@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduJobTypeMapper">
+    
+    <resultMap type="EduJobType" id="EduJobTypeResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduFaId"    column="edu_fa_id"    />
+        <result property="eduName"    column="edu_name"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+    </resultMap>
+
+    <sql id="selectEduJobTypeVo">
+        select edu_id, edu_fa_id, edu_name, edu_create_time, edu_modify_time, edu_create_user, edu_modify_user from edu_job_type
+    </sql>
+
+    <select id="selectEduJobTypeList" parameterType="EduJobType" resultMap="EduJobTypeResult">
+        <include refid="selectEduJobTypeVo"/>
+        <where>  
+            <if test="eduFaId != null "> and edu_fa_id = #{eduFaId}</if>
+            <if test="eduName != null  and eduName != ''"> and edu_name like concat('%', #{eduName}, '%')</if>
+            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
+            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
+            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
+            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduJobTypeByEduId" parameterType="Long" resultMap="EduJobTypeResult">
+        <include refid="selectEduJobTypeVo"/>
+        where edu_id = #{eduId}
+    </select>
+        
+    <insert id="insertEduJobType" parameterType="EduJobType" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_job_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduFaId != null">edu_fa_id,</if>
+            <if test="eduName != null">edu_name,</if>
+            <if test="eduCreateTime != null">edu_create_time,</if>
+            <if test="eduModifyTime != null">edu_modify_time,</if>
+            <if test="eduCreateUser != null">edu_create_user,</if>
+            <if test="eduModifyUser != null">edu_modify_user,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduFaId != null">#{eduFaId},</if>
+            <if test="eduName != null">#{eduName},</if>
+            <if test="eduCreateTime != null">#{eduCreateTime},</if>
+            <if test="eduModifyTime != null">#{eduModifyTime},</if>
+            <if test="eduCreateUser != null">#{eduCreateUser},</if>
+            <if test="eduModifyUser != null">#{eduModifyUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduJobType" parameterType="EduJobType">
+        update edu_job_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduFaId != null">edu_fa_id = #{eduFaId},</if>
+            <if test="eduName != null">edu_name = #{eduName},</if>
+            <if test="eduCreateTime != null">edu_create_time = #{eduCreateTime},</if>
+            <if test="eduModifyTime != null">edu_modify_time = #{eduModifyTime},</if>
+            <if test="eduCreateUser != null">edu_create_user = #{eduCreateUser},</if>
+            <if test="eduModifyUser != null">edu_modify_user = #{eduModifyUser},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduJobTypeByEduId" parameterType="Long">
+        delete from edu_job_type where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduJobTypeByEduIds" parameterType="String">
+        delete from edu_job_type where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

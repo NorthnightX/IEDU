@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduCompanyScaleMapper">
+    
+    <resultMap type="EduCompanyScale" id="EduCompanyScaleResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduScale"    column="edu_scale"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+    </resultMap>
+
+    <sql id="selectEduCompanyScaleVo">
+        select edu_id, edu_scale, edu_create_user, edu_modify_user, edu_create_time, edu_modify_time from edu_company_scale
+    </sql>
+
+    <select id="selectEduCompanyScaleList" parameterType="EduCompanyScale" resultMap="EduCompanyScaleResult">
+        <include refid="selectEduCompanyScaleVo"/>
+        <where>  
+            <if test="eduScale != null  and eduScale != ''"> and edu_scale = #{eduScale}</if>
+            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
+            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
+            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
+            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduCompanyScaleByEduId" parameterType="Long" resultMap="EduCompanyScaleResult">
+        <include refid="selectEduCompanyScaleVo"/>
+        where edu_id = #{eduId}
+    </select>
+        
+    <insert id="insertEduCompanyScale" parameterType="EduCompanyScale" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_company_scale
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduScale != null">edu_scale,</if>
+            <if test="eduCreateUser != null">edu_create_user,</if>
+            <if test="eduModifyUser != null">edu_modify_user,</if>
+            <if test="eduCreateTime != null">edu_create_time,</if>
+            <if test="eduModifyTime != null">edu_modify_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduScale != null">#{eduScale},</if>
+            <if test="eduCreateUser != null">#{eduCreateUser},</if>
+            <if test="eduModifyUser != null">#{eduModifyUser},</if>
+            <if test="eduCreateTime != null">#{eduCreateTime},</if>
+            <if test="eduModifyTime != null">#{eduModifyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduCompanyScale" parameterType="EduCompanyScale">
+        update edu_company_scale
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduScale != null">edu_scale = #{eduScale},</if>
+            <if test="eduCreateUser != null">edu_create_user = #{eduCreateUser},</if>
+            <if test="eduModifyUser != null">edu_modify_user = #{eduModifyUser},</if>
+            <if test="eduCreateTime != null">edu_create_time = #{eduCreateTime},</if>
+            <if test="eduModifyTime != null">edu_modify_time = #{eduModifyTime},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduCompanyScaleByEduId" parameterType="Long">
+        delete from edu_company_scale where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduCompanyScaleByEduIds" parameterType="String">
+        delete from edu_company_scale where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

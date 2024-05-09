@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduNewsMapper">
+    
+    <resultMap type="EduNews" id="EduNewsResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduTitle"    column="edu_title"    />
+        <result property="eduPublisher"    column="edu_publisher"    />
+        <result property="eduPublishTime"    column="edu_publish_time"    />
+        <result property="eduContent"    column="edu_content"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+    </resultMap>
+
+    <sql id="selectEduNewsVo">
+        select edu_id, edu_title, edu_publisher, edu_publish_time, edu_content, edu_create_user, edu_modify_user, edu_create_time, edu_modify_time from edu_news
+    </sql>
+
+    <select id="selectEduNewsList" parameterType="EduNews" resultMap="EduNewsResult">
+        <include refid="selectEduNewsVo"/>
+        <where>  
+            <if test="eduTitle != null  and eduTitle != ''"> and edu_title like concat('%', #{eduTitle}, '%')</if>
+            <if test="eduPublisher != null  and eduPublisher != ''"> and edu_publisher = #{eduPublisher}</if>
+            <if test="eduPublishTime != null "> and edu_publish_time = #{eduPublishTime}</if>
+            <if test="eduContent != null  and eduContent != ''"> and edu_content = #{eduContent}</if>
+            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
+            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
+            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
+            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduNewsByEduId" parameterType="Long" resultMap="EduNewsResult">
+        <include refid="selectEduNewsVo"/>
+        where edu_id = #{eduId}
+    </select>
+
+    <select id="selectCurrentNews" resultType="com.iedu.service.domain.EduNews">
+        SELECT edu_id, edu_title from edu_news order by edu_publish_time desc limit 7
+    </select>
+
+    <insert id="insertEduNews" parameterType="EduNews" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduTitle != null">edu_title,</if>
+            <if test="eduPublisher != null">edu_publisher,</if>
+            <if test="eduPublishTime != null">edu_publish_time,</if>
+            <if test="eduContent != null">edu_content,</if>
+            <if test="eduCreateUser != null">edu_create_user,</if>
+            <if test="eduModifyUser != null">edu_modify_user,</if>
+            <if test="eduCreateTime != null">edu_create_time,</if>
+            <if test="eduModifyTime != null">edu_modify_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduTitle != null">#{eduTitle},</if>
+            <if test="eduPublisher != null">#{eduPublisher},</if>
+            <if test="eduPublishTime != null">#{eduPublishTime},</if>
+            <if test="eduContent != null">#{eduContent},</if>
+            <if test="eduCreateUser != null">#{eduCreateUser},</if>
+            <if test="eduModifyUser != null">#{eduModifyUser},</if>
+            <if test="eduCreateTime != null">#{eduCreateTime},</if>
+            <if test="eduModifyTime != null">#{eduModifyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduNews" parameterType="EduNews">
+        update edu_news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduTitle != null">edu_title = #{eduTitle},</if>
+            <if test="eduPublisher != null">edu_publisher = #{eduPublisher},</if>
+            <if test="eduPublishTime != null">edu_publish_time = #{eduPublishTime},</if>
+            <if test="eduContent != null">edu_content = #{eduContent},</if>
+            <if test="eduCreateUser != null">edu_create_user = #{eduCreateUser},</if>
+            <if test="eduModifyUser != null">edu_modify_user = #{eduModifyUser},</if>
+            <if test="eduCreateTime != null">edu_create_time = #{eduCreateTime},</if>
+            <if test="eduModifyTime != null">edu_modify_time = #{eduModifyTime},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduNewsByEduId" parameterType="Long">
+        delete from edu_news where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduNewsByEduIds" parameterType="String">
+        delete from edu_news where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

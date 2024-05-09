@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduRecruitMapper">
+    
+    <resultMap type="EduRecruit" id="EduRecruitResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduCompanyId"    column="edu_company_id"    />
+        <result property="eduJobName"    column="edu_job_name"    />
+        <result property="eduJobTypeId"    column="edu_job_type_id"    />
+        <result property="eduCityId"    column="edu_city_id"    />
+        <result property="eduEduId"    column="edu_edu_id"    />
+        <result property="eduExpId"    column="edu_exp_id"    />
+        <result property="eduSalary"    column="edu_salary"    />
+        <result property="eduWelfare"    column="edu_welfare"    />
+        <result property="eduIntroduceTag"    column="edu_introduce_tag"    />
+        <result property="eduIntroduce"    column="edu_introduce"    />
+        <result property="eduStartTime"    column="edu_start_time"    />
+        <result property="eduEndTime"    column="edu_end_time"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+    </resultMap>
+
+    <resultMap type="RecruitVO" id="EduRecruitResultVO">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduCompanyId"    column="edu_company_id"    />
+        <result property="companyName"    column="edu_company_name"    />
+        <result property="eduCompanyIndustryId"    column="edu_industry_id"    />
+        <result property="industryName"    column="edu_industry"    />
+        <result property="eduJobName"    column="edu_job_name"    />
+        <result property="eduJobTypeId"    column="edu_job_type_id"    />
+        <result property="jobTypeName"    column="edu_name"    />
+        <result property="eduCityId"    column="edu_city_id"    />
+        <result property="cityName"    column="cityName"    />
+        <result property="eduEduId"    column="edu_edu_id"    />
+        <result property="eduName"    column="edu_edu"    />
+        <result property="eduExpId"    column="edu_exp_id"    />
+        <result property="expName"    column="edu_exp"    />
+        <result property="eduSalary"    column="edu_salary"    />
+        <result property="eduWelfare"    column="edu_welfare"    />
+        <result property="eduIntroduceTag"    column="edu_introduce_tag"    />
+        <result property="eduIntroduce"    column="edu_introduce"    />
+        <result property="eduStartTime"    column="edu_start_time"    />
+        <result property="eduEndTime"    column="edu_end_time"    />
+    </resultMap>
+
+    <sql id="selectEduRecruitVo">
+        select edu_id, edu_company_id, edu_job_name, edu_job_type_id, edu_city_id, edu_edu_id, edu_exp_id, edu_salary, edu_welfare, edu_introduce_tag, edu_introduce, edu_start_time, edu_end_time, edu_create_user, edu_modify_user, edu_create_time, edu_modify_time from edu_recruit
+    </sql>
+
+    <select id="selectEduRecruitList" parameterType="EduRecruit" resultMap="EduRecruitResult">
+        <include refid="selectEduRecruitVo"/>
+        <where>  
+            <if test="eduCompanyId != null "> and edu_company_id = #{eduCompanyId}</if>
+            <if test="eduJobName != null  and eduJobName != ''"> and edu_job_name like concat('%', #{eduJobName}, '%')</if>
+            <if test="eduJobTypeId != null "> and edu_job_type_id = #{eduJobTypeId}</if>
+            <if test="eduCityId != null "> and edu_city_id = #{eduCityId}</if>
+            <if test="eduEduId != null "> and edu_edu_id = #{eduEduId}</if>
+            <if test="eduExpId != null "> and edu_exp_id = #{eduExpId}</if>
+            <if test="eduSalary != null  and eduSalary != ''"> and edu_salary = #{eduSalary}</if>
+            <if test="eduWelfare != null  and eduWelfare != ''"> and edu_welfare = #{eduWelfare}</if>
+            <if test="eduIntroduceTag != null  and eduIntroduceTag != ''"> and edu_introduce_tag = #{eduIntroduceTag}</if>
+            <if test="eduIntroduce != null  and eduIntroduce != ''"> and edu_introduce = #{eduIntroduce}</if>
+            <if test="eduStartTime != null "> and edu_start_time = #{eduStartTime}</if>
+            <if test="eduEndTime != null "> and edu_end_time = #{eduEndTime}</if>
+            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
+            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
+            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
+            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduRecruitByEduId" parameterType="Long" resultMap="EduRecruitResult">
+        <include refid="selectEduRecruitVo"/>
+        where edu_id = #{eduId}
+    </select>
+    <select id="selectEduRecruitVOList" resultMap="EduRecruitResultVO">
+        SELECT
+            recruit.edu_id as 'edu_id',
+                recruit.edu_company_id as 'edu_company_id',
+                company.edu_company_name as 'edu_company_name',
+                recruit.edu_job_name as 'edu_job_name',
+                recruit.edu_job_type_id as 'edu_job_type_id',
+                job_type.edu_name as 'edu_name',
+                recruit.edu_city_id as 'edu_city_id',
+                provinces.mergerName as 'cityName',
+                recruit.edu_edu_id as 'edu_edu_id',
+                edu_req.edu_edu as 'edu_edu',
+                recruit.edu_exp_id as 'edu_exp_id',
+                job_exp.edu_exp as 'edu_exp',
+                recruit.edu_salary as 'edu_salary',
+                recruit.edu_welfare as 'edu_welfare',
+                recruit.edu_introduce_tag as 'edu_introduce_tag',
+                recruit.edu_introduce as 'edu_introduce',
+                recruit.edu_start_time as 'edu_start_time',
+                recruit.edu_end_time as 'edu_end_time',
+                industry.edu_id as 'edu_industry_id',
+                industry.edu_industry as 'edu_industry'
+        FROM edu_recruit AS recruit
+                 JOIN edu_company AS company ON company.edu_id = recruit.edu_company_id
+                 JOIN edu_job_type AS job_type ON job_type.edu_id = recruit.edu_job_type_id
+                 JOIN s_provinces AS provinces ON provinces.id = recruit.edu_city_id
+                 JOIN edu_job_experience AS job_exp ON job_exp.edu_id = recruit.edu_exp_id
+                 JOIN edu_education_requirement AS edu_req ON edu_req.edu_id = recruit.edu_edu_id
+                 JOIN edu_company_industry AS industry ON company.edu_company_industry_id = industry.edu_id;
+    </select>
+    <select id="selectEduRecruitDetailById" resultMap="EduRecruitResultVO">
+        SELECT
+            recruit.edu_id as 'edu_id',
+                recruit.edu_company_id as 'edu_company_id',
+                company.edu_company_name as 'edu_company_name',
+                recruit.edu_job_name as 'edu_job_name',
+                recruit.edu_job_type_id as 'edu_job_type_id',
+                job_type.edu_name as 'edu_name',
+                recruit.edu_city_id as 'edu_city_id',
+                provinces.mergerName as 'cityName',
+                recruit.edu_edu_id as 'edu_edu_id',
+                edu_req.edu_edu as 'edu_edu',
+                recruit.edu_exp_id as 'edu_exp_id',
+                job_exp.edu_exp as 'edu_exp',
+                recruit.edu_salary as 'edu_salary',
+                recruit.edu_welfare as 'edu_welfare',
+                recruit.edu_introduce_tag as 'edu_introduce_tag',
+                recruit.edu_introduce as 'edu_introduce',
+                recruit.edu_start_time as 'edu_start_time',
+                recruit.edu_end_time as 'edu_end_time',
+                industry.edu_id as 'edu_industry_id',
+                industry.edu_industry as 'edu_industry'
+        FROM edu_recruit AS recruit
+                 JOIN edu_company AS company ON company.edu_id = recruit.edu_company_id
+                 JOIN edu_job_type AS job_type ON job_type.edu_id = recruit.edu_job_type_id
+                 JOIN s_provinces AS provinces ON provinces.id = recruit.edu_city_id
+                 JOIN edu_job_experience AS job_exp ON job_exp.edu_id = recruit.edu_exp_id
+                 JOIN edu_education_requirement AS edu_req ON edu_req.edu_id = recruit.edu_edu_id
+                 JOIN edu_company_industry AS industry ON company.edu_company_industry_id = industry.edu_id
+        <where>
+            recruit.edu_id = #{id}
+        </where>
+    </select>
+
+    <insert id="insertEduRecruit" parameterType="EduRecruit" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_recruit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduCompanyId != null">edu_company_id,</if>
+            <if test="eduJobName != null">edu_job_name,</if>
+            <if test="eduJobTypeId != null">edu_job_type_id,</if>
+            <if test="eduCityId != null">edu_city_id,</if>
+            <if test="eduEduId != null">edu_edu_id,</if>
+            <if test="eduExpId != null">edu_exp_id,</if>
+            <if test="eduSalary != null">edu_salary,</if>
+            <if test="eduWelfare != null">edu_welfare,</if>
+            <if test="eduIntroduceTag != null">edu_introduce_tag,</if>
+            <if test="eduIntroduce != null">edu_introduce,</if>
+            <if test="eduStartTime != null">edu_start_time,</if>
+            <if test="eduEndTime != null">edu_end_time,</if>
+            <if test="eduCreateUser != null">edu_create_user,</if>
+            <if test="eduModifyUser != null">edu_modify_user,</if>
+            <if test="eduCreateTime != null">edu_create_time,</if>
+            <if test="eduModifyTime != null">edu_modify_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduCompanyId != null">#{eduCompanyId},</if>
+            <if test="eduJobName != null">#{eduJobName},</if>
+            <if test="eduJobTypeId != null">#{eduJobTypeId},</if>
+            <if test="eduCityId != null">#{eduCityId},</if>
+            <if test="eduEduId != null">#{eduEduId},</if>
+            <if test="eduExpId != null">#{eduExpId},</if>
+            <if test="eduSalary != null">#{eduSalary},</if>
+            <if test="eduWelfare != null">#{eduWelfare},</if>
+            <if test="eduIntroduceTag != null">#{eduIntroduceTag},</if>
+            <if test="eduIntroduce != null">#{eduIntroduce},</if>
+            <if test="eduStartTime != null">#{eduStartTime},</if>
+            <if test="eduEndTime != null">#{eduEndTime},</if>
+            <if test="eduCreateUser != null">#{eduCreateUser},</if>
+            <if test="eduModifyUser != null">#{eduModifyUser},</if>
+            <if test="eduCreateTime != null">#{eduCreateTime},</if>
+            <if test="eduModifyTime != null">#{eduModifyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduRecruit" parameterType="EduRecruit">
+        update edu_recruit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduCompanyId != null">edu_company_id = #{eduCompanyId},</if>
+            <if test="eduJobName != null">edu_job_name = #{eduJobName},</if>
+            <if test="eduJobTypeId != null">edu_job_type_id = #{eduJobTypeId},</if>
+            <if test="eduCityId != null">edu_city_id = #{eduCityId},</if>
+            <if test="eduEduId != null">edu_edu_id = #{eduEduId},</if>
+            <if test="eduExpId != null">edu_exp_id = #{eduExpId},</if>
+            <if test="eduSalary != null">edu_salary = #{eduSalary},</if>
+            <if test="eduWelfare != null">edu_welfare = #{eduWelfare},</if>
+            <if test="eduIntroduceTag != null">edu_introduce_tag = #{eduIntroduceTag},</if>
+            <if test="eduIntroduce != null">edu_introduce = #{eduIntroduce},</if>
+            <if test="eduStartTime != null">edu_start_time = #{eduStartTime},</if>
+            <if test="eduEndTime != null">edu_end_time = #{eduEndTime},</if>
+            <if test="eduCreateUser != null">edu_create_user = #{eduCreateUser},</if>
+            <if test="eduModifyUser != null">edu_modify_user = #{eduModifyUser},</if>
+            <if test="eduCreateTime != null">edu_create_time = #{eduCreateTime},</if>
+            <if test="eduModifyTime != null">edu_modify_time = #{eduModifyTime},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduRecruitByEduId" parameterType="Long">
+        delete from edu_recruit where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduRecruitByEduIds" parameterType="String">
+        delete from edu_recruit where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

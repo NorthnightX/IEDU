@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduCompanyUserMapper">
+    
+    <resultMap type="EduCompanyUser" id="EduCompanyUserResult">
+        <result property="eduCompanyId"    column="edu_company_id"    />
+        <result property="eduUserId"    column="edu_user_id"    />
+    </resultMap>
+
+    <sql id="selectEduCompanyUserVo">
+        select edu_company_id, edu_user_id from edu_company_user
+    </sql>
+
+    <select id="selectEduCompanyUserList" parameterType="EduCompanyUser" resultMap="EduCompanyUserResult">
+        <include refid="selectEduCompanyUserVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectEduCompanyUserByEduCompanyId" parameterType="Long" resultMap="EduCompanyUserResult">
+        <include refid="selectEduCompanyUserVo"/>
+        where edu_company_id = #{eduCompanyId}
+    </select>
+    <select id="selectCompanyByUserId" resultType="java.lang.Long">
+        select edu_company_id from edu_company_user
+        <where>
+            edu_user_id = #{userId}
+        </where>
+    </select>
+
+    <insert id="insertEduCompanyUser" parameterType="EduCompanyUser">
+        insert into edu_company_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduCompanyId != null">edu_company_id,</if>
+            <if test="eduUserId != null">edu_user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduCompanyId != null">#{eduCompanyId},</if>
+            <if test="eduUserId != null">#{eduUserId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduCompanyUser" parameterType="EduCompanyUser">
+        update edu_company_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduUserId != null">edu_user_id = #{eduUserId},</if>
+        </trim>
+        where edu_company_id = #{eduCompanyId}
+    </update>
+
+    <delete id="deleteEduCompanyUserByEduCompanyId" parameterType="Long">
+        delete from edu_company_user where edu_company_id = #{eduCompanyId}
+    </delete>
+
+    <delete id="deleteEduCompanyUserByEduCompanyIds" parameterType="String">
+        delete from edu_company_user where edu_company_id in 
+        <foreach item="eduCompanyId" collection="array" open="(" separator="," close=")">
+            #{eduCompanyId}
+        </foreach>
+    </delete>
+</mapper>

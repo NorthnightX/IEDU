@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.SProvincesMapper">
+    
+    <resultMap type="SProvinces" id="SProvincesResult">
+        <result property="id"    column="id"    />
+        <result property="cityName"    column="cityName"    />
+        <result property="parentId"    column="parentId"    />
+        <result property="shortName"    column="shortName"    />
+        <result property="depth"    column="depth"    />
+        <result property="cityCode"    column="cityCode"    />
+        <result property="zipCode"    column="zipCode"    />
+        <result property="mergerName"    column="mergerName"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="pinyin"    column="pinyin"    />
+        <result property="isUse"    column="isUse"    />
+    </resultMap>
+
+    <sql id="selectSProvincesVo">
+        select id, cityName, parentId, shortName, depth, cityCode, zipCode, mergerName, longitude, latitude, pinyin, isUse from s_provinces
+    </sql>
+
+    <select id="selectSProvincesList" parameterType="SProvinces" resultMap="SProvincesResult">
+        <include refid="selectSProvincesVo"/>
+        <where>  
+            <if test="cityName != null  and cityName != ''"> and cityName like concat('%', #{cityName}, '%')</if>
+            <if test="parentId != null "> and parentId = #{parentId}</if>
+            <if test="shortName != null  and shortName != ''"> and shortName like concat('%', #{shortName}, '%')</if>
+            <if test="depth != null "> and depth = #{depth}</if>
+            <if test="cityCode != null  and cityCode != ''"> and cityCode = #{cityCode}</if>
+            <if test="zipCode != null  and zipCode != ''"> and zipCode = #{zipCode}</if>
+            <if test="mergerName != null  and mergerName != ''"> and mergerName like concat('%', #{mergerName}, '%')</if>
+            <if test="longitude != null  and longitude != ''"> and longitude = #{longitude}</if>
+            <if test="latitude != null  and latitude != ''"> and latitude = #{latitude}</if>
+            <if test="pinyin != null  and pinyin != ''"> and pinyin = #{pinyin}</if>
+            <if test="isUse != null "> and isUse = #{isUse}</if>
+        </where>
+    </select>
+    
+    <select id="selectSProvincesById" parameterType="Long" resultMap="SProvincesResult">
+        <include refid="selectSProvincesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSProvinces" parameterType="SProvinces">
+        insert into s_provinces
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="cityName != null and cityName != ''">cityName,</if>
+            <if test="parentId != null">parentId,</if>
+            <if test="shortName != null and shortName != ''">shortName,</if>
+            <if test="depth != null">depth,</if>
+            <if test="cityCode != null and cityCode != ''">cityCode,</if>
+            <if test="zipCode != null and zipCode != ''">zipCode,</if>
+            <if test="mergerName != null and mergerName != ''">mergerName,</if>
+            <if test="longitude != null and longitude != ''">longitude,</if>
+            <if test="latitude != null and latitude != ''">latitude,</if>
+            <if test="pinyin != null and pinyin != ''">pinyin,</if>
+            <if test="isUse != null">isUse,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="cityName != null and cityName != ''">#{cityName},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="shortName != null and shortName != ''">#{shortName},</if>
+            <if test="depth != null">#{depth},</if>
+            <if test="cityCode != null and cityCode != ''">#{cityCode},</if>
+            <if test="zipCode != null and zipCode != ''">#{zipCode},</if>
+            <if test="mergerName != null and mergerName != ''">#{mergerName},</if>
+            <if test="longitude != null and longitude != ''">#{longitude},</if>
+            <if test="latitude != null and latitude != ''">#{latitude},</if>
+            <if test="pinyin != null and pinyin != ''">#{pinyin},</if>
+            <if test="isUse != null">#{isUse},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSProvinces" parameterType="SProvinces">
+        update s_provinces
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cityName != null and cityName != ''">cityName = #{cityName},</if>
+            <if test="parentId != null">parentId = #{parentId},</if>
+            <if test="shortName != null and shortName != ''">shortName = #{shortName},</if>
+            <if test="depth != null">depth = #{depth},</if>
+            <if test="cityCode != null and cityCode != ''">cityCode = #{cityCode},</if>
+            <if test="zipCode != null and zipCode != ''">zipCode = #{zipCode},</if>
+            <if test="mergerName != null and mergerName != ''">mergerName = #{mergerName},</if>
+            <if test="longitude != null and longitude != ''">longitude = #{longitude},</if>
+            <if test="latitude != null and latitude != ''">latitude = #{latitude},</if>
+            <if test="pinyin != null and pinyin != ''">pinyin = #{pinyin},</if>
+            <if test="isUse != null">isUse = #{isUse},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSProvincesById" parameterType="Long">
+        delete from s_provinces where id = #{id}
+    </delete>
+
+    <delete id="deleteSProvincesByIds" parameterType="String">
+        delete from s_provinces where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

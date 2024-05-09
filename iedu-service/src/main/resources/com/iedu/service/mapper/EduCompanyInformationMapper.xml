@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduCompanyInformationMapper">
+    
+    <resultMap type="EduCompanyInformation" id="EduCompanyInformationResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduCompanyId"    column="edu_company_id"    />
+        <result property="eduLegalRepresentative"    column="edu_legal_representative"    />
+        <result property="eduEnterpriseType"    column="edu_enterprise_type"    />
+        <result property="eduRegisteredCapital"    column="edu_registered_capital"    />
+        <result property="eduSocialCreditCode"    column="edu_social_credit_code"    />
+        <result property="eduOperatingPeriod"    column="edu_operating_period"    />
+        <result property="eduArea"    column="edu_area"    />
+        <result property="eduOperatingStatus"    column="edu_operating_status"    />
+        <result property="eduRegistrationAuthority"    column="edu_registration_authority"    />
+        <result property="eduRegisteredAddress"    column="edu_registered_address"    />
+        <result property="eduEstablishmentDate"    column="edu_establishment_date"    />
+        <result property="eduBusinessScope"    column="edu_business_scope"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+    </resultMap>
+
+    <sql id="selectEduCompanyInformationVo">
+        select edu_id, edu_company_id, edu_legal_representative, edu_enterprise_type, edu_registered_capital, edu_social_credit_code, edu_operating_period, edu_area, edu_operating_status, edu_registration_authority, edu_registered_address, edu_establishment_date, edu_business_scope, edu_create_user, edu_modify_user, edu_create_time, edu_modify_time from edu_company_information
+    </sql>
+
+    <select id="selectEduCompanyInformationList" parameterType="EduCompanyInformation" resultMap="EduCompanyInformationResult">
+        <include refid="selectEduCompanyInformationVo"/>
+        <where>  
+            <if test="eduCompanyId != null "> and edu_company_id = #{eduCompanyId}</if>
+            <if test="eduLegalRepresentative != null  and eduLegalRepresentative != ''"> and edu_legal_representative = #{eduLegalRepresentative}</if>
+            <if test="eduEnterpriseType != null  and eduEnterpriseType != ''"> and edu_enterprise_type = #{eduEnterpriseType}</if>
+            <if test="eduRegisteredCapital != null "> and edu_registered_capital = #{eduRegisteredCapital}</if>
+            <if test="eduSocialCreditCode != null  and eduSocialCreditCode != ''"> and edu_social_credit_code = #{eduSocialCreditCode}</if>
+            <if test="eduOperatingPeriod != null  and eduOperatingPeriod != ''"> and edu_operating_period = #{eduOperatingPeriod}</if>
+            <if test="eduArea != null  and eduArea != ''"> and edu_area = #{eduArea}</if>
+            <if test="eduOperatingStatus != null  and eduOperatingStatus != ''"> and edu_operating_status = #{eduOperatingStatus}</if>
+            <if test="eduRegistrationAuthority != null  and eduRegistrationAuthority != ''"> and edu_registration_authority = #{eduRegistrationAuthority}</if>
+            <if test="eduRegisteredAddress != null  and eduRegisteredAddress != ''"> and edu_registered_address = #{eduRegisteredAddress}</if>
+            <if test="eduEstablishmentDate != null "> and edu_establishment_date = #{eduEstablishmentDate}</if>
+            <if test="eduBusinessScope != null  and eduBusinessScope != ''"> and edu_business_scope = #{eduBusinessScope}</if>
+            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
+            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
+            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
+            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduCompanyInformationByEduId" parameterType="Long" resultMap="EduCompanyInformationResult">
+        <include refid="selectEduCompanyInformationVo"/>
+        where edu_id = #{eduId}
+    </select>
+        
+    <insert id="insertEduCompanyInformation" parameterType="EduCompanyInformation" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_company_information
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduCompanyId != null">edu_company_id,</if>
+            <if test="eduLegalRepresentative != null">edu_legal_representative,</if>
+            <if test="eduEnterpriseType != null">edu_enterprise_type,</if>
+            <if test="eduRegisteredCapital != null">edu_registered_capital,</if>
+            <if test="eduSocialCreditCode != null">edu_social_credit_code,</if>
+            <if test="eduOperatingPeriod != null">edu_operating_period,</if>
+            <if test="eduArea != null">edu_area,</if>
+            <if test="eduOperatingStatus != null">edu_operating_status,</if>
+            <if test="eduRegistrationAuthority != null">edu_registration_authority,</if>
+            <if test="eduRegisteredAddress != null">edu_registered_address,</if>
+            <if test="eduEstablishmentDate != null">edu_establishment_date,</if>
+            <if test="eduBusinessScope != null">edu_business_scope,</if>
+            <if test="eduCreateUser != null">edu_create_user,</if>
+            <if test="eduModifyUser != null">edu_modify_user,</if>
+            <if test="eduCreateTime != null">edu_create_time,</if>
+            <if test="eduModifyTime != null">edu_modify_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduCompanyId != null">#{eduCompanyId},</if>
+            <if test="eduLegalRepresentative != null">#{eduLegalRepresentative},</if>
+            <if test="eduEnterpriseType != null">#{eduEnterpriseType},</if>
+            <if test="eduRegisteredCapital != null">#{eduRegisteredCapital},</if>
+            <if test="eduSocialCreditCode != null">#{eduSocialCreditCode},</if>
+            <if test="eduOperatingPeriod != null">#{eduOperatingPeriod},</if>
+            <if test="eduArea != null">#{eduArea},</if>
+            <if test="eduOperatingStatus != null">#{eduOperatingStatus},</if>
+            <if test="eduRegistrationAuthority != null">#{eduRegistrationAuthority},</if>
+            <if test="eduRegisteredAddress != null">#{eduRegisteredAddress},</if>
+            <if test="eduEstablishmentDate != null">#{eduEstablishmentDate},</if>
+            <if test="eduBusinessScope != null">#{eduBusinessScope},</if>
+            <if test="eduCreateUser != null">#{eduCreateUser},</if>
+            <if test="eduModifyUser != null">#{eduModifyUser},</if>
+            <if test="eduCreateTime != null">#{eduCreateTime},</if>
+            <if test="eduModifyTime != null">#{eduModifyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduCompanyInformation" parameterType="EduCompanyInformation">
+        update edu_company_information
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduCompanyId != null">edu_company_id = #{eduCompanyId},</if>
+            <if test="eduLegalRepresentative != null">edu_legal_representative = #{eduLegalRepresentative},</if>
+            <if test="eduEnterpriseType != null">edu_enterprise_type = #{eduEnterpriseType},</if>
+            <if test="eduRegisteredCapital != null">edu_registered_capital = #{eduRegisteredCapital},</if>
+            <if test="eduSocialCreditCode != null">edu_social_credit_code = #{eduSocialCreditCode},</if>
+            <if test="eduOperatingPeriod != null">edu_operating_period = #{eduOperatingPeriod},</if>
+            <if test="eduArea != null">edu_area = #{eduArea},</if>
+            <if test="eduOperatingStatus != null">edu_operating_status = #{eduOperatingStatus},</if>
+            <if test="eduRegistrationAuthority != null">edu_registration_authority = #{eduRegistrationAuthority},</if>
+            <if test="eduRegisteredAddress != null">edu_registered_address = #{eduRegisteredAddress},</if>
+            <if test="eduEstablishmentDate != null">edu_establishment_date = #{eduEstablishmentDate},</if>
+            <if test="eduBusinessScope != null">edu_business_scope = #{eduBusinessScope},</if>
+            <if test="eduCreateUser != null">edu_create_user = #{eduCreateUser},</if>
+            <if test="eduModifyUser != null">edu_modify_user = #{eduModifyUser},</if>
+            <if test="eduCreateTime != null">edu_create_time = #{eduCreateTime},</if>
+            <if test="eduModifyTime != null">edu_modify_time = #{eduModifyTime},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduCompanyInformationByEduId" parameterType="Long">
+        delete from edu_company_information where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduCompanyInformationByEduIds" parameterType="String">
+        delete from edu_company_information where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

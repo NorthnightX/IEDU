@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduCompanyIndustryMapper">
+    
+    <resultMap type="EduCompanyIndustry" id="EduCompanyIndustryResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduFaId"    column="edu_fa_id"    />
+        <result property="eduIndustry"    column="edu_industry"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+    </resultMap>
+    <resultMap type="EduCompanyIndustry" id="EduCompanyIndustryResultHaveChildren">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduFaId"    column="edu_fa_id"    />
+        <result property="eduIndustry"    column="edu_industry"    />
+        <collection property="child" ofType="EduCompanyIndustry">
+            <result property="eduId"    column="edu_id"    />
+            <result property="eduFaId"    column="edu_fa_id"    />
+            <result property="eduIndustry"    column="edu_industry"    />
+        </collection>
+    </resultMap>
+    <sql id="selectEduCompanyIndustryVo">
+        select edu_id, edu_fa_id, edu_industry, edu_create_time, edu_modify_time, edu_create_user, edu_modify_user from edu_company_industry
+    </sql>
+
+    <select id="selectEduCompanyIndustryList" parameterType="EduCompanyIndustry" resultMap="EduCompanyIndustryResult">
+        <include refid="selectEduCompanyIndustryVo"/>
+        <where>  
+            <if test="eduFaId != null "> and edu_fa_id = #{eduFaId}</if>
+            <if test="eduIndustry != null  and eduIndustry != ''"> and edu_industry = #{eduIndustry}</if>
+            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
+            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
+            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
+            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduCompanyIndustryByEduId" parameterType="Long" resultMap="EduCompanyIndustryResult">
+        <include refid="selectEduCompanyIndustryVo"/>
+        where edu_id = #{eduId}
+    </select>
+    <select id="selectIndustryListWithChildren" resultType="com.iedu.service.domain.EduCompanyIndustry" resultMap="EduCompanyIndustryResultHaveChildren">
+        select b.edu_id, b.edu_fa_id, b.edu_industry
+        from
+            edu_company_industry a
+        join
+            edu_company_industry b
+        <where>
+            a.edu_id = b.edu_fa_id
+            and
+            a.edu_id = #{id}
+        </where>
+    </select>
+
+    <insert id="insertEduCompanyIndustry" parameterType="EduCompanyIndustry" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_company_industry
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduFaId != null">edu_fa_id,</if>
+            <if test="eduIndustry != null">edu_industry,</if>
+            <if test="eduCreateTime != null">edu_create_time,</if>
+            <if test="eduModifyTime != null">edu_modify_time,</if>
+            <if test="eduCreateUser != null">edu_create_user,</if>
+            <if test="eduModifyUser != null">edu_modify_user,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduFaId != null">#{eduFaId},</if>
+            <if test="eduIndustry != null">#{eduIndustry},</if>
+            <if test="eduCreateTime != null">#{eduCreateTime},</if>
+            <if test="eduModifyTime != null">#{eduModifyTime},</if>
+            <if test="eduCreateUser != null">#{eduCreateUser},</if>
+            <if test="eduModifyUser != null">#{eduModifyUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduCompanyIndustry" parameterType="EduCompanyIndustry">
+        update edu_company_industry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduFaId != null">edu_fa_id = #{eduFaId},</if>
+            <if test="eduIndustry != null">edu_industry = #{eduIndustry},</if>
+            <if test="eduCreateTime != null">edu_create_time = #{eduCreateTime},</if>
+            <if test="eduModifyTime != null">edu_modify_time = #{eduModifyTime},</if>
+            <if test="eduCreateUser != null">edu_create_user = #{eduCreateUser},</if>
+            <if test="eduModifyUser != null">edu_modify_user = #{eduModifyUser},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduCompanyIndustryByEduId" parameterType="Long">
+        delete from edu_company_industry where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduCompanyIndustryByEduIds" parameterType="String">
+        delete from edu_company_industry where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>
