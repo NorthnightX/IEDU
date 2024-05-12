@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduAcademyMapper">
+    
+    <resultMap type="EduAcademy" id="EduAcademyResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduAcademyName"    column="edu_academy_name"    />
+        <result property="eduAcademyTag"    column="edu_academy_tag"    />
+        <result property="eduAcademyIntroduce"    column="edu_academy_introduce"    />
+        <result property="eduAddressId"    column="edu_address_id"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+    </resultMap>
+
+    <sql id="selectEduAcademyVo">
+        select edu_id, edu_academy_name, edu_academy_tag, edu_academy_introduce, edu_address_id, edu_create_user, edu_modify_user, edu_create_time, edu_modify_time from edu_academy
+    </sql>
+
+    <select id="selectEduAcademyList" parameterType="EduAcademy" resultMap="EduAcademyResult">
+        <include refid="selectEduAcademyVo"/>
+        <where>  
+            <if test="eduAcademyName != null  and eduAcademyName != ''"> and edu_academy_name like concat('%', #{eduAcademyName}, '%')</if>
+            <if test="eduAcademyTag != null  and eduAcademyTag != ''"> and edu_academy_tag = #{eduAcademyTag}</if>
+            <if test="eduAcademyIntroduce != null  and eduAcademyIntroduce != ''"> and edu_academy_introduce = #{eduAcademyIntroduce}</if>
+            <if test="eduAddressId != null "> and edu_address_id = #{eduAddressId}</if>
+            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
+            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
+            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
+            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduAcademyByEduId" parameterType="Long" resultMap="EduAcademyResult">
+        <include refid="selectEduAcademyVo"/>
+        where edu_id = #{eduId}
+    </select>
+        
+    <insert id="insertEduAcademy" parameterType="EduAcademy" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_academy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduAcademyName != null">edu_academy_name,</if>
+            <if test="eduAcademyTag != null">edu_academy_tag,</if>
+            <if test="eduAcademyIntroduce != null">edu_academy_introduce,</if>
+            <if test="eduAddressId != null">edu_address_id,</if>
+            <if test="eduCreateUser != null">edu_create_user,</if>
+            <if test="eduModifyUser != null">edu_modify_user,</if>
+            <if test="eduCreateTime != null">edu_create_time,</if>
+            <if test="eduModifyTime != null">edu_modify_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduAcademyName != null">#{eduAcademyName},</if>
+            <if test="eduAcademyTag != null">#{eduAcademyTag},</if>
+            <if test="eduAcademyIntroduce != null">#{eduAcademyIntroduce},</if>
+            <if test="eduAddressId != null">#{eduAddressId},</if>
+            <if test="eduCreateUser != null">#{eduCreateUser},</if>
+            <if test="eduModifyUser != null">#{eduModifyUser},</if>
+            <if test="eduCreateTime != null">#{eduCreateTime},</if>
+            <if test="eduModifyTime != null">#{eduModifyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduAcademy" parameterType="EduAcademy">
+        update edu_academy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduAcademyName != null">edu_academy_name = #{eduAcademyName},</if>
+            <if test="eduAcademyTag != null">edu_academy_tag = #{eduAcademyTag},</if>
+            <if test="eduAcademyIntroduce != null">edu_academy_introduce = #{eduAcademyIntroduce},</if>
+            <if test="eduAddressId != null">edu_address_id = #{eduAddressId},</if>
+            <if test="eduCreateUser != null">edu_create_user = #{eduCreateUser},</if>
+            <if test="eduModifyUser != null">edu_modify_user = #{eduModifyUser},</if>
+            <if test="eduCreateTime != null">edu_create_time = #{eduCreateTime},</if>
+            <if test="eduModifyTime != null">edu_modify_time = #{eduModifyTime},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduAcademyByEduId" parameterType="Long">
+        delete from edu_academy where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduAcademyByEduIds" parameterType="String">
+        delete from edu_academy where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

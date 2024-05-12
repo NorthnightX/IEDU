@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduAcademyAddressMapper">
+    
+    <resultMap type="EduAcademyAddress" id="EduAcademyAddressResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduAcademyId"    column="edu_academy_id"    />
+        <result property="eduCountryId"    column="edu_country_id"    />
+        <result property="eduProvinceId"    column="edu_province_id"    />
+        <result property="eduCityId"    column="edu_city_id"    />
+        <result property="eduDistrictId"    column="edu_district_id"    />
+        <result property="eduDetailedAddress"    column="edu_detailed_address"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+    </resultMap>
+
+    <sql id="selectEduAcademyAddressVo">
+        select edu_id, edu_academy_id, edu_country_id, edu_province_id, edu_city_id, edu_district_id, edu_detailed_address, edu_create_user, edu_modify_user, edu_create_time, edu_modify_time from edu_academy_address
+    </sql>
+
+    <select id="selectEduAcademyAddressList" parameterType="EduAcademyAddress" resultMap="EduAcademyAddressResult">
+        <include refid="selectEduAcademyAddressVo"/>
+        <where>  
+            <if test="eduAcademyId != null "> and edu_academy_id = #{eduAcademyId}</if>
+            <if test="eduCountryId != null  and eduCountryId != ''"> and edu_country_id = #{eduCountryId}</if>
+            <if test="eduProvinceId != null  and eduProvinceId != ''"> and edu_province_id = #{eduProvinceId}</if>
+            <if test="eduCityId != null  and eduCityId != ''"> and edu_city_id = #{eduCityId}</if>
+            <if test="eduDistrictId != null  and eduDistrictId != ''"> and edu_district_id = #{eduDistrictId}</if>
+            <if test="eduDetailedAddress != null  and eduDetailedAddress != ''"> and edu_detailed_address = #{eduDetailedAddress}</if>
+            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
+            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
+            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
+            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduAcademyAddressByEduId" parameterType="Long" resultMap="EduAcademyAddressResult">
+        <include refid="selectEduAcademyAddressVo"/>
+        where edu_id = #{eduId}
+    </select>
+        
+    <insert id="insertEduAcademyAddress" parameterType="EduAcademyAddress" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_academy_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduAcademyId != null">edu_academy_id,</if>
+            <if test="eduCountryId != null">edu_country_id,</if>
+            <if test="eduProvinceId != null">edu_province_id,</if>
+            <if test="eduCityId != null">edu_city_id,</if>
+            <if test="eduDistrictId != null">edu_district_id,</if>
+            <if test="eduDetailedAddress != null">edu_detailed_address,</if>
+            <if test="eduCreateUser != null">edu_create_user,</if>
+            <if test="eduModifyUser != null">edu_modify_user,</if>
+            <if test="eduCreateTime != null">edu_create_time,</if>
+            <if test="eduModifyTime != null">edu_modify_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduAcademyId != null">#{eduAcademyId},</if>
+            <if test="eduCountryId != null">#{eduCountryId},</if>
+            <if test="eduProvinceId != null">#{eduProvinceId},</if>
+            <if test="eduCityId != null">#{eduCityId},</if>
+            <if test="eduDistrictId != null">#{eduDistrictId},</if>
+            <if test="eduDetailedAddress != null">#{eduDetailedAddress},</if>
+            <if test="eduCreateUser != null">#{eduCreateUser},</if>
+            <if test="eduModifyUser != null">#{eduModifyUser},</if>
+            <if test="eduCreateTime != null">#{eduCreateTime},</if>
+            <if test="eduModifyTime != null">#{eduModifyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduAcademyAddress" parameterType="EduAcademyAddress">
+        update edu_academy_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduAcademyId != null">edu_academy_id = #{eduAcademyId},</if>
+            <if test="eduCountryId != null">edu_country_id = #{eduCountryId},</if>
+            <if test="eduProvinceId != null">edu_province_id = #{eduProvinceId},</if>
+            <if test="eduCityId != null">edu_city_id = #{eduCityId},</if>
+            <if test="eduDistrictId != null">edu_district_id = #{eduDistrictId},</if>
+            <if test="eduDetailedAddress != null">edu_detailed_address = #{eduDetailedAddress},</if>
+            <if test="eduCreateUser != null">edu_create_user = #{eduCreateUser},</if>
+            <if test="eduModifyUser != null">edu_modify_user = #{eduModifyUser},</if>
+            <if test="eduCreateTime != null">edu_create_time = #{eduCreateTime},</if>
+            <if test="eduModifyTime != null">edu_modify_time = #{eduModifyTime},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduAcademyAddressByEduId" parameterType="Long">
+        delete from edu_academy_address where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduAcademyAddressByEduIds" parameterType="String">
+        delete from edu_academy_address where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>
