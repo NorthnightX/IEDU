@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="公司id" prop="eduCompanyId">
+      <el-form-item label="学校id" prop="eduAcademyId">
         <el-input
-          v-model="queryParams.eduCompanyId"
-          placeholder="请输入公司id"
+          v-model="queryParams.eduAcademyId"
+          placeholder="请输入学校id"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -23,7 +23,7 @@
 <!--          icon="Edit"-->
 <!--          :disabled="single"-->
 <!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['service:address:edit']"-->
+<!--          v-hasPermi="['service:academyAddress:edit']"-->
 <!--        >修改</el-button>-->
 <!--      </el-col>-->
 <!--      <el-col :span="1.5">-->
@@ -33,7 +33,7 @@
 <!--          icon="Delete"-->
 <!--          :disabled="multiple"-->
 <!--          @click="handleDelete"-->
-<!--          v-hasPermi="['service:address:remove']"-->
+<!--          v-hasPermi="['service:academyAddress:remove']"-->
 <!--        >删除</el-button>-->
 <!--      </el-col>-->
 <!--      <el-col :span="1.5">-->
@@ -42,16 +42,16 @@
 <!--          plain-->
 <!--          icon="Download"-->
 <!--          @click="handleExport"-->
-<!--          v-hasPermi="['service:address:export']"-->
+<!--          v-hasPermi="['service:academyAddress:export']"-->
 <!--        >导出</el-button>-->
 <!--      </el-col>-->
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="addressList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="academyAddressList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="eduId" />
-      <el-table-column label="公司id" align="center" prop="eduCompanyId" />
+      <el-table-column label="学校id" align="center" prop="eduAcademyId" />
       <el-table-column label="国家" align="center" prop="eduCountryId" />
       <el-table-column label="省" align="center" prop="eduProvinceId" />
       <el-table-column label="市" align="center" prop="eduCityId" />
@@ -71,8 +71,8 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['service:address:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['service:address:remove']">删除</el-button>
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['service:academyAddress:edit']">修改</el-button>
+          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['service:academyAddress:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -85,11 +85,11 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改公司地址对话框 -->
+    <!-- 添加或修改学校地址对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="addressRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="公司id" prop="eduCompanyId">
-          <el-input v-model="form.eduCompanyId" placeholder="请输入公司id" />
+      <el-form ref="academyAddressRef" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="学校id" prop="eduAcademyId">
+          <el-input v-model="form.eduAcademyId" placeholder="请输入学校id" />
         </el-form-item>
         <el-form-item label="详细地址" prop="eduDetailedAddress">
           <el-input v-model="form.eduDetailedAddress" placeholder="请输入详细地址" />
@@ -105,20 +105,12 @@
   </div>
 </template>
 
-<script setup name="Address">
-import {
-  listAddress,
-  getAddress,
-  delAddress,
-  addAddress,
-  updateAddress,
-  getAddressByCompany
-} from "@/api/service/address";
-import {getDistrictList} from "@/api/service/provinces.js";
+<script setup name="AcademyAddress">
+import { listAcademyAddress, getAcademyAddress, delAcademyAddress, addAcademyAddress, updateAcademyAddress } from "@/api/service/academyAddress";
 
 const { proxy } = getCurrentInstance();
 
-const addressList = ref([]);
+const academyAddressList = ref([]);
 const open = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
@@ -133,7 +125,7 @@ const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    eduCompanyId: null,
+    eduAcademyId: null,
     eduCountryId: null,
     eduProvinceId: null,
     eduCityId: null,
@@ -150,11 +142,11 @@ const data = reactive({
 
 const { queryParams, form, rules } = toRefs(data);
 
-/** 查询公司地址列表 */
+/** 查询学校地址列表 */
 function getList() {
   loading.value = true;
-  listAddress(queryParams.value).then(response => {
-    addressList.value = response.rows;
+  listAcademyAddress(queryParams.value).then(response => {
+    academyAddressList.value = response.rows;
     total.value = response.total;
     loading.value = false;
   });
@@ -170,7 +162,7 @@ function cancel() {
 function reset() {
   form.value = {
     eduId: null,
-    eduCompanyId: null,
+    eduAcademyId: null,
     eduCountryId: null,
     eduProvinceId: null,
     eduCityId: null,
@@ -181,7 +173,7 @@ function reset() {
     eduCreateTime: null,
     eduModifyTime: null
   };
-  proxy.resetForm("addressRef");
+  proxy.resetForm("academyAddressRef");
 }
 
 /** 搜索按钮操作 */
@@ -207,32 +199,32 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加公司地址";
+  title.value = "添加学校地址";
 }
 
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
   const _eduId = row.eduId || ids.value
-  getAddress(_eduId).then(response => {
+  getAcademyAddress(_eduId).then(response => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改公司地址";
+    title.value = "修改学校地址";
   });
 }
 
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs["addressRef"].validate(valid => {
+  proxy.$refs["academyAddressRef"].validate(valid => {
     if (valid) {
       if (form.value.eduId != null) {
-        updateAddress(form.value).then(response => {
+        updateAcademyAddress(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
           getList();
         });
       } else {
-        addAddress(form.value).then(response => {
+        addAcademyAddress(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
           open.value = false;
           getList();
@@ -245,8 +237,8 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _eduIds = row.eduId || ids.value;
-  proxy.$modal.confirm('是否确认删除公司地址编号为"' + _eduIds + '"的数据项？').then(function() {
-    return delAddress(_eduIds);
+  proxy.$modal.confirm('是否确认删除学校地址编号为"' + _eduIds + '"的数据项？').then(function() {
+    return delAcademyAddress(_eduIds);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");
@@ -255,9 +247,9 @@ function handleDelete(row) {
 
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download('service/address/export', {
+  proxy.download('service/academyAddress/export', {
     ...queryParams.value
-  }, `address_${new Date().getTime()}.xlsx`)
+  }, `academyAddress_${new Date().getTime()}.xlsx`)
 }
 
 getList();

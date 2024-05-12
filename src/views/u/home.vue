@@ -8,8 +8,10 @@ import {getRecruitToExhibit} from "@/api/service/recruit.js";
 import {listAllType} from "@/api/service/type.js";
 import {getDistrictList} from "@/api/service/provinces.js";
 import {Search} from "@element-plus/icons-vue";
+import {getCurrentArticle} from "@/api/service/article.js";
 
 const newsList = ref([])
+const articleList = ref([])
 const searchForm = ref({
   eduCityId:"",
   eduJobTypeId:"",
@@ -21,6 +23,11 @@ const jobList = ref([])
 function getNews() {
   getCurrentNews().then((res) => {
     newsList.value = res.data
+  })
+}
+function getArticle(){
+  getCurrentArticle().then((res) => {
+    articleList.value = res.data
   })
 }
 function getCity() {
@@ -39,8 +46,8 @@ function getJob(){
   })
 }
 
-function toArticle(id) {
-  router.push({ path: '/u/article', query: { eduId: id } });
+function toArticle(id, type) {
+  router.push({ path: '/u/article', query: { eduId: id, type: type } });
 }
 function toRecruit(id){
   router.push({ path: '/u/recruit', query: { eduId: id } });
@@ -49,6 +56,7 @@ getNews();
 getJob();
 getCity();
 getJobType();
+getArticle();
 </script>
 
 <template>
@@ -81,7 +89,7 @@ getJobType();
               </el-table-column>
               <el-table-column prop="eduTitle" align="left" @click="toArticle()">
                 <template #default="{ row }">
-                  <a @click="toArticle(row.eduId)"
+                  <a @click="toArticle(row.eduId, 'news')"
                      style="display: -webkit-box;text-overflow: ellipsis;
                       overflow: hidden;-webkit-line-clamp: 1;-webkit-box-orient: vertical;
                       white-space: pre-line;">
@@ -92,11 +100,12 @@ getJobType();
             </el-table>
           </el-card>
         </div>
+<!--        动态文章-->
         <div style="display: flex;align-items: center;width: 49%;justify-content: center">
           <el-card class="news" shadow="hover"
                style="height: 400px;width: 100%;padding: 20px 0 20px 0;
                background-color: white;border-radius: 15px;">
-            <el-table :show-header="false" :cell-style="{}" :data="newsList"
+            <el-table :show-header="false" :cell-style="{}" :data="articleList"
                       style="--el-table-border-color: none;" size="large">
               <el-table-column prop="eduPublishTime" width="140px" align="center">
                 <template #default="{ row }">
@@ -110,7 +119,7 @@ getJobType();
                 <template #default="{ row }">
                   <a style="display: -webkit-box;text-overflow: ellipsis;
                       overflow: hidden;-webkit-line-clamp: 1;-webkit-box-orient: vertical;
-                      white-space: pre-line;">
+                      white-space: pre-line;" @click="toArticle(row.eduId, 'article')">
                     {{ row.eduTitle }}
                   </a>
                 </template>

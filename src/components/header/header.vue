@@ -10,7 +10,7 @@ const redirect = ref(undefined);
 // 登录
 const loginFormVisible = ref(false)
 const pwd_form_vis = ref(true)
-
+const searchText = ref('')
 const showLoginForm = function () {
   loginFormVisible.value = true
 }
@@ -30,15 +30,14 @@ let changeLoginFormSMS = function () {
   pwd_form_vis.value = false
 }
 
-const loginForm= ref({
+const loginForm = ref({
   username: "",
   password: "",
   phone: '',
   sms: '',
 });
 
-function handleLogin()
-{
+function handleLogin() {
   userStore.login(loginForm.value).then(() => {
     const query = route.query;
     Object.keys(query).reduce((acc, cur) => {
@@ -53,6 +52,11 @@ function handleLogin()
     loading.value = false;
   });
 }
+
+function toSearch() {
+  router.push({path: '/u/search', query: {text: searchText.value}});
+}
+
 userStore.getInfo()
 </script>
 
@@ -80,23 +84,23 @@ userStore.getInfo()
     <div style="align-items: center;justify-content: center;display: flex;">
       <div style="margin: 4% 2%">
         <el-input
-            v-model="input1"
+            v-model="searchText"
             class="home_input"
             placeholder="这是输入框"
             style="height: 35px;border:0;border-radius: 5%;outline:none;background-color:#F8F8F8;"
         >
           <template #append>
-            <el-button :icon="Search"/>
+            <el-button :icon="Search" @click="toSearch()"/>
           </template>
         </el-input>
       </div>
     </div>
     <div style="align-items: center;display: flex;justify-content: center;margin-right: 3%">
       <div v-if="userStore.name.length === 0">
-        <el-button  class="home-login-button" type="text" @click="showLoginForm">登录</el-button>
+        <el-button class="home-login-button" type="text" @click="showLoginForm">登录</el-button>
       </div>
       <div v-else style="align-items: center;display: flex;justify-content: center;">
-        <el-avatar  :src="userStore.avatar">
+        <el-avatar :src="userStore.avatar">
         </el-avatar>
       </div>
     </div>
@@ -156,7 +160,8 @@ userStore.getInfo()
     <div style="align-items: center;justify-content: space-around;display: flex;width: 100%;margin-top: 20px">
       <div style="align-items: center;display: flex;justify-content: center;width: 70%;">
         <el-button style="width: 50%;height: 40px;border-radius: 10px;">注册</el-button>
-        <el-button style="width: 50%;height: 40px;border-radius: 10px;background-color: #00AEEC;color: white;"  @click="handleLogin()">登录
+        <el-button style="width: 50%;height: 40px;border-radius: 10px;background-color: #00AEEC;color: white;"
+                   @click="handleLogin()">登录
         </el-button>
       </div>
     </div>
@@ -196,6 +201,7 @@ userStore.getInfo()
   0 2px 6px 0 rgba(0, 0, 0, .02);
 
 }
+
 
 /*登录输入框1*/
 .login_input_1 {
@@ -258,13 +264,22 @@ userStore.getInfo()
     0 1px 0 0 #E2E4E7;
   }
 
+  & :deep(.el-input-group__prepend) {
+    background-color: white;
+    box-shadow: 0 -1px 0 0 #E2E4E7,
+    -1px 0 0 0 #E2E4E7,
+    0 1px 0 0 #E2E4E7;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+  }
+
   & :deep(.el-input__wrapper) {
     box-shadow: 0 -1px 0 0 #E2E4E7,
     -1px 0 0 0 #E2E4E7,
-    1px 0 0 0 #E2E4E7,
     0 1px 0 0 #E2E4E7;
-
   }
+
+
 }
 
 /*抽屉*/

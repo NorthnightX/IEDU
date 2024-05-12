@@ -2,16 +2,25 @@
 import {onMounted} from "vue";
 import router from "@/router/index.js";
 import {getNews} from "@/api/service/news.js";
+import {getArticle} from "@/api/service/article.js";
 
 const article = ref("")
-function getArticle(eduId){
-  getNews(eduId).then((res) =>{
-    article.value = res.data
-  })
+function getMessage(eduId, type){
+  if(type === 'news'){
+    getNews(eduId).then((res) =>{
+      article.value = res.data
+    })
+  } else {
+    getArticle(eduId).then((res) => {
+      article.value = res.data
+    })
+  }
+
 }
 onMounted(() => {
   var eduId = router.currentRoute.value.query.eduId;
-  getArticle(eduId)
+  var type = router.currentRoute.value.query.type;
+  getMessage(eduId, type)
 })
 
 </script>

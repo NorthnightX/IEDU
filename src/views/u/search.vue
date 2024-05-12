@@ -1,6 +1,22 @@
 <script setup>
 import top from  '@/components/header/header.vue'
 import bottom from '@/components/bottom/bottom.vue'
+import {onMounted} from "vue";
+import router from "@/router/index.js";
+import {useRoute} from "vue-router";
+const text = ref("")
+onMounted(() => {
+  text.value = router.currentRoute.value.query.text;
+
+})
+const route = useRoute();
+watch(() => route.query.text, (newValue, oldValue) => {
+  text.value = newValue
+});
+
+function searchMessage(){
+
+}
 </script>
 
 <template>
@@ -8,6 +24,13 @@ import bottom from '@/components/bottom/bottom.vue'
     <top></top>
     <div style="width: 100%;display: flex;justify-content: space-around;;margin: 20px 0;">
       <div style="width: 76%;">
+        <div style="display: flex;justify-content: right">
+          <div style="height: 250px;width: 88%;background-color: white;margin: 5px;border-radius: 10px">
+            <div >
+
+            </div>
+          </div>
+        </div>
         <div v-for="i in 10" style="display: flex;justify-content: right">
           <div style="height: 100px;width: 88%;background-color: white;margin: 5px;border-radius: 10px">
 

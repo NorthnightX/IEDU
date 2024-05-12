@@ -457,7 +457,6 @@ function handleAddress(row) {
     addressTitle.value = "修改地址信息";
     console.log(addressForm.value)
   })
-
 }
 
 function submitInformationForm() {
