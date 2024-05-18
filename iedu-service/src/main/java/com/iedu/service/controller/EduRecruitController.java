@@ -1,25 +1,21 @@
 package com.iedu.service.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.iedu.common.annotation.Log;
 import com.iedu.common.core.controller.BaseController;
 import com.iedu.common.core.domain.AjaxResult;
-import com.iedu.common.enums.BusinessType;
-import com.iedu.service.domain.EduRecruit;
-import com.iedu.service.service.IEduRecruitService;
-import com.iedu.common.utils.poi.ExcelUtil;
 import com.iedu.common.core.page.TableDataInfo;
+import com.iedu.common.enums.BusinessType;
+import com.iedu.common.utils.poi.ExcelUtil;
+import com.iedu.service.domain.EduRecruit;
+import com.iedu.service.domain.Page;
+import com.iedu.service.domain.VO.RecruitVO;
+import com.iedu.service.service.IEduRecruitService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 招聘信息Controller
@@ -112,5 +108,20 @@ public class EduRecruitController extends BaseController
     public AjaxResult getDetails(@PathVariable int id)
     {
         return success(eduRecruitService.selectRecruitDetailById(id));
+    }
+
+    @GetMapping("/u/getRecruitByKeyWord")
+    public AjaxResult getRecruitByKeyWord(@RequestParam("text") String text,
+                                          @RequestParam("pageSize") Integer pageSize, @RequestParam("pageNum") Integer pageNum){
+
+        text = "%" + text + "%";
+        List<RecruitVO> list = eduRecruitService.selectRecruitByKeyWord(text, pageSize, pageNum);
+        int total = eduRecruitService.selectCountByKeyWord(text);
+        Page<RecruitVO> page = new Page<>();
+        page.setPageNum(pageNum);
+        page.setPageSize(pageSize);
+        page.setData(list);
+        page.setTotal(total);
+        return success(page);
     }
 }

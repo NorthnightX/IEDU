@@ -2,16 +2,12 @@ package com.iedu.service.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.iedu.service.domain.EduNews;
+import com.iedu.service.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.iedu.common.annotation.Log;
 import com.iedu.common.core.controller.BaseController;
 import com.iedu.common.core.domain.AjaxResult;
@@ -105,5 +101,19 @@ public class EduArticleController extends BaseController
     public AjaxResult getCurrentArticle()
     {
         return success(eduArticleService.selectCurrentArticle());
+    }
+
+    @GetMapping("/u/getArticleByKeyword")
+    public AjaxResult getArticleByKeyword(@RequestParam("text") String text,
+                                       @RequestParam("pageSize") Integer pageSize, @RequestParam("pageNum") Integer pageNum){
+        text = "%" + text + "%";
+        List<EduArticle> list = eduArticleService.selectArticleByKeyWord(text, pageSize, pageNum);
+        int total = eduArticleService.selectCountByKeyWord(text);
+        Page<EduArticle> page = new Page<>();
+        page.setPageNum(pageNum);
+        page.setPageSize(pageSize);
+        page.setData(list);
+        page.setTotal(total);
+        return success(page);
     }
 }

@@ -3,6 +3,7 @@ package com.iedu.service.mapper;
 import java.util.List;
 import com.iedu.service.domain.EduArticle;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 动态Mapper接口
@@ -60,4 +61,8 @@ public interface EduArticleMapper
      * @return 结果
      */
     public int deleteEduArticleByEduIds(Long[] eduIds);
+
+    List<EduArticle> selectByKeyWord(@Param("text") String text, @Param("pageSize") int pageNum, @Param("offset") int offset);
+
+    int selectCountByKeyWord(String text);
 }

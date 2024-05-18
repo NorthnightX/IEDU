@@ -60,4 +60,8 @@ public interface IEduArticleService
     public int deleteEduArticleByEduId(Long eduId);
 
     List<EduArticle> selectCurrentArticle();
+
+    List<EduArticle> selectArticleByKeyWord(String text, Integer pageSize, Integer pageNum);
+
+    int selectCountByKeyWord(String text);
 }

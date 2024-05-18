@@ -3,8 +3,7 @@ package com.iedu.service.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.iedu.common.core.domain.model.LoginUser;
-import com.iedu.common.utils.SecurityUtils;
+import com.iedu.service.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -109,5 +108,18 @@ public class EduNewsController extends BaseController
     public AjaxResult getArticleById(@RequestParam Long eduId)
     {
         return success(eduNewsService.selectEduNewsByEduId(eduId));
+    }
+
+    @GetMapping("/u/getNewsByKeyword")
+    public AjaxResult getNewsByKeyword(@RequestParam("text") String text,
+                                       @RequestParam("pageSize") Integer pageSize, @RequestParam("pageNum") Integer pageNum){
+        List<EduNews> list = eduNewsService.selectNewsByKeyWord(text, pageSize, pageNum);
+        int total = eduNewsService.selectCountByKeyWord(text);
+        Page<EduNews> page = new Page<>();
+        page.setPageNum(pageNum);
+        page.setPageSize(pageSize);
+        page.setData(list);
+        page.setTotal(total);
+        return success(page);
     }
 }

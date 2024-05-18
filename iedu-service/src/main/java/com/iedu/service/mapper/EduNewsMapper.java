@@ -3,6 +3,7 @@ package com.iedu.service.mapper;
 import java.util.List;
 import com.iedu.service.domain.EduNews;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 新闻Mapper接口
@@ -62,4 +63,8 @@ public interface EduNewsMapper
     public int deleteEduNewsByEduIds(Long[] eduIds);
 
     List<EduNews> selectCurrentNews();
+
+    List<EduNews> selectByKeyWord(@Param("text") String text, @Param("pageSize") int pageNum, @Param("offset") int offset);
+
+    int selectCountByKeyWord(String text);
 }

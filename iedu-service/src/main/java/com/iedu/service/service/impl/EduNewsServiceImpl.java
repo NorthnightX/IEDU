@@ -3,7 +3,6 @@ package com.iedu.service.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.iedu.common.core.domain.model.LoginUser;
 import com.iedu.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,4 +106,17 @@ public class EduNewsServiceImpl implements IEduNewsService
     public List<EduNews> selectCurrentNews() {
         return eduNewsMapper.selectEduNewsList(new EduNews());
     }
+
+    @Override
+    public List<EduNews> selectNewsByKeyWord(String text, Integer pageSize, Integer pageNum) {
+        int offset = (pageNum - 1) * pageSize;
+        text = "%" + text + "%";
+        return eduNewsMapper.selectByKeyWord(text, pageSize, offset);
+    }
+
+    @Override
+    public int selectCountByKeyWord(String text) {
+        return eduNewsMapper.selectCountByKeyWord(text);
+    }
+
 }

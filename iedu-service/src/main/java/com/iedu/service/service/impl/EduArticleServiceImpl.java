@@ -106,4 +106,16 @@ public class EduArticleServiceImpl implements IEduArticleService
     public List<EduArticle> selectCurrentArticle() {
         return eduArticleMapper.selectEduArticleList(new EduArticle());
     }
+
+    @Override
+    public List<EduArticle> selectArticleByKeyWord(String text, Integer pageSize, Integer pageNum) {
+        int offset = (pageNum - 1) * pageSize;
+        text = "%" + text + "%";
+        return eduArticleMapper.selectByKeyWord(text, pageSize, offset);
+    }
+
+    @Override
+    public int selectCountByKeyWord(String text) {
+        return eduArticleMapper.selectCountByKeyWord(text);
+    }
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.iedu.common.utils.SecurityUtils;
-import com.iedu.service.domain.JobTypeVO;
+import com.iedu.service.domain.VO.JobTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;

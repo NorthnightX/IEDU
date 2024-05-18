@@ -1,12 +1,10 @@
 package com.iedu.service.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.iedu.common.utils.SecurityUtils;
-import com.iedu.common.utils.bean.BeanUtils;
-import com.iedu.service.domain.RecruitVO;
+import com.iedu.service.domain.VO.RecruitVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.iedu.service.mapper.EduRecruitMapper;
@@ -113,5 +111,16 @@ public class EduRecruitServiceImpl implements IEduRecruitService
     @Override
     public RecruitVO selectRecruitDetailById(int id) {
         return eduRecruitMapper.selectEduRecruitDetailById(id);
+    }
+
+    @Override
+    public List<RecruitVO> selectRecruitByKeyWord(String text, Integer pageSize, Integer pageNum) {
+        int offset = (pageNum - 1) * pageSize;
+        return eduRecruitMapper.selectByKeyWord(text, pageSize, offset);
+    }
+
+    @Override
+    public int selectCountByKeyWord(String text) {
+        return eduRecruitMapper.selectCountByKeyWord(text);
     }
 }

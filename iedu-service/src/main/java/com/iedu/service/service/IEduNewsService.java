@@ -60,4 +60,8 @@ public interface IEduNewsService
     public int deleteEduNewsByEduId(Long eduId);
 
     List<EduNews> selectCurrentNews();
+
+    List<EduNews> selectNewsByKeyWord(String text, Integer pageSize, Integer pageNum);
+
+    int selectCountByKeyWord(String text);
 }

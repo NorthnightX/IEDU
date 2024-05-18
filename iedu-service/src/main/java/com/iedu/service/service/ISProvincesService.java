@@ -2,7 +2,7 @@ package com.iedu.service.service;
 
 import java.util.List;
 
-import com.iedu.service.domain.ProvincesVO;
+import com.iedu.service.domain.VO.ProvincesVO;
 import com.iedu.service.domain.SProvinces;
 
 /**

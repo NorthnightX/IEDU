@@ -2,7 +2,7 @@ package com.iedu.service.service;
 
 import java.util.List;
 import com.iedu.service.domain.EduRecruit;
-import com.iedu.service.domain.RecruitVO;
+import com.iedu.service.domain.VO.RecruitVO;
 
 /**
  * 招聘信息Service接口
@@ -63,4 +63,8 @@ public interface IEduRecruitService
     List<RecruitVO> selectRecruitToShow();
 
     RecruitVO selectRecruitDetailById(int id);
+
+    List<RecruitVO> selectRecruitByKeyWord(String text, Integer pageSize, Integer pageNum);
+
+    int selectCountByKeyWord(String text);
 }

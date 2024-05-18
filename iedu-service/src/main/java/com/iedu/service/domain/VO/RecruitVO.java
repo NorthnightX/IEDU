@@ -1,4 +1,4 @@
-package com.iedu.service.domain;
+package com.iedu.service.domain.VO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.iedu.common.annotation.Excel;

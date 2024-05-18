@@ -39,8 +39,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where edu_id = #{eduId}
     </select>
 
-    <select id="selectCurrentNews" resultType="com.iedu.service.domain.EduNews">
+    <select id="selectCurrentNews"  resultMap="EduNewsResult">
         SELECT edu_id, edu_title from edu_news order by edu_publish_time desc limit 7
+    </select>
+    <select id="selectByKeyWord" resultMap="EduNewsResult">
+        select edu_id, edu_title, edu_publisher, edu_publish_time, edu_content from edu_news
+        <where>
+            edu_title like #{text}
+            limit #{pageSize}
+            offset #{offset}
+        </where>
+
+    </select>
+    <select id="selectCountByKeyWord" resultType="java.lang.Integer">
+        select count(1) from edu_news
+        <where>
+            edu_title like concat('%', #{text}, '%')
+        </where>
     </select>
 
     <insert id="insertEduNews" parameterType="EduNews" useGeneratedKeys="true" keyProperty="eduId">

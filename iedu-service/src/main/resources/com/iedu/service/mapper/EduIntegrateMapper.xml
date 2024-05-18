@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduIntegrateMapper">
+    
+    <resultMap type="EduIntegrate" id="EduIntegrateResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduProjectName"    column="edu_project_name"    />
+        <result property="eduProjectDescription"    column="edu_project_description"    />
+        <result property="eduProjectType"    column="edu_project_type"    />
+        <result property="eduProjectField"    column="edu_project_field"    />
+        <result property="eduPublisher"    column="edu_publisher"    />
+        <result property="eduContact"    column="edu_contact"    />
+        <result property="eduOfficialWebsite"    column="edu_official_website"    />
+        <result property="eduStartTime"    column="edu_start_time"    />
+        <result property="eduEndTime"    column="edu_end_time"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+    </resultMap>
+
+    <resultMap type="IntegrateVO" id="EduIntegrateVO">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduProjectName"    column="edu_project_name"    />
+        <result property="eduProjectDescription"    column="edu_project_description"    />
+        <result property="eduProjectType"    column="edu_project_type"    />
+        <result property="eduProjectTypeName"    column="edu_name"    />
+        <result property="eduProjectField"    column="edu_project_field"    />
+        <result property="eduPublisher"    column="edu_publisher"    />
+        <result property="eduContact"    column="edu_contact"    />
+        <result property="eduOfficialWebsite"    column="edu_official_website"    />
+        <result property="eduStartTime"    column="edu_start_time"    />
+        <result property="eduEndTime"    column="edu_end_time"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+    </resultMap>
+
+    <sql id="selectEduIntegrateVo">
+        select edu_id, edu_project_name, edu_project_description, edu_project_type, edu_project_field, edu_publisher, edu_contact, edu_official_website, edu_start_time, edu_end_time, edu_create_user, edu_modify_user, edu_create_time, edu_modify_time from edu_integrate
+    </sql>
+    <sql id = "EduIntegrateVO">
+        select i.edu_id as edu_id,
+               i.edu_project_name as edu_project_name,
+               i.edu_project_description as edu_project_description,
+               i.edu_project_type as edu_project_type,
+               t.edu_name as edu_name,
+               i.edu_project_field as edu_project_field,
+               i.edu_publisher as edu_publisher,
+               i.edu_contact as edu_contact,
+               i.edu_official_website as edu_official_website,
+               i.edu_start_time as edu_start_time,
+               i.edu_end_time as edu_end_time,
+               i.edu_create_user as edu_create_user,
+               i.edu_modify_user as edu_modify_user,
+               i.edu_create_time as edu_create_time,
+               i.edu_modify_time as edu_modify_time
+        FROM edu_integrate AS i
+        join edu_integrate_type AS t where i.edu_project_type = t.edu_id
+
+    </sql>
+    <select id="selectEduIntegrateList" parameterType="EduIntegrate" resultMap="EduIntegrateResult">
+        <include refid="selectEduIntegrateVo"/>
+        <where>  
+            <if test="eduProjectName != null  and eduProjectName != ''"> and edu_project_name like concat('%', #{eduProjectName}, '%')</if>
+            <if test="eduProjectDescription != null  and eduProjectDescription != ''"> and edu_project_description = #{eduProjectDescription}</if>
+            <if test="eduProjectType != null "> and edu_project_type = #{eduProjectType}</if>
+            <if test="eduProjectField != null  and eduProjectField != ''"> and edu_project_field = #{eduProjectField}</if>
+            <if test="eduPublisher != null  and eduPublisher != ''"> and edu_publisher = #{eduPublisher}</if>
+            <if test="eduContact != null  and eduContact != ''"> and edu_contact = #{eduContact}</if>
+            <if test="eduOfficialWebsite != null  and eduOfficialWebsite != ''"> and edu_official_website = #{eduOfficialWebsite}</if>
+            <if test="eduStartTime != null "> and edu_start_time = #{eduStartTime}</if>
+            <if test="eduEndTime != null "> and edu_end_time = #{eduEndTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduIntegrateByEduId" parameterType="Long" resultMap="EduIntegrateResult">
+        <include refid="selectEduIntegrateVo"/>
+        where edu_id = #{eduId}
+    </select>
+    <select id="selectByKeyWord" resultMap="EduIntegrateVO">
+        <include refid="EduIntegrateVO"/>
+            AND
+            i.edu_project_name like #{text}
+            limit #{pageSize} offset #{offset}
+    </select>
+
+    <select id="selectCountByKeyWord" resultType="java.lang.Integer">
+        select count(1) from edu_integrate
+        <where>
+            edu_project_name like #{text}
+        </where>
+    </select>
+    <select id="selectIntegrateById" resultMap="EduIntegrateVO">
+        <include refid="EduIntegrateVO"/>
+        AND i.edu_id = #{eduId}
+    </select>
+
+    <insert id="insertEduIntegrate" parameterType="EduIntegrate" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_integrate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduProjectName != null and eduProjectName != ''">edu_project_name,</if>
+            <if test="eduProjectDescription != null and eduProjectDescription != ''">edu_project_description,</if>
+            <if test="eduProjectType != null">edu_project_type,</if>
+            <if test="eduProjectField != null and eduProjectField != ''">edu_project_field,</if>
+            <if test="eduPublisher != null and eduPublisher != ''">edu_publisher,</if>
+            <if test="eduContact != null and eduContact != ''">edu_contact,</if>
+            <if test="eduOfficialWebsite != null">edu_official_website,</if>
+            <if test="eduStartTime != null">edu_start_time,</if>
+            <if test="eduEndTime != null">edu_end_time,</if>
+            <if test="eduCreateUser != null">edu_create_user,</if>
+            <if test="eduModifyUser != null">edu_modify_user,</if>
+            <if test="eduCreateTime != null">edu_create_time,</if>
+            <if test="eduModifyTime != null">edu_modify_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduProjectName != null and eduProjectName != ''">#{eduProjectName},</if>
+            <if test="eduProjectDescription != null and eduProjectDescription != ''">#{eduProjectDescription},</if>
+            <if test="eduProjectType != null">#{eduProjectType},</if>
+            <if test="eduProjectField != null and eduProjectField != ''">#{eduProjectField},</if>
+            <if test="eduPublisher != null and eduPublisher != ''">#{eduPublisher},</if>
+            <if test="eduContact != null and eduContact != ''">#{eduContact},</if>
+            <if test="eduOfficialWebsite != null">#{eduOfficialWebsite},</if>
+            <if test="eduStartTime != null">#{eduStartTime},</if>
+            <if test="eduEndTime != null">#{eduEndTime},</if>
+            <if test="eduCreateUser != null">#{eduCreateUser},</if>
+            <if test="eduModifyUser != null">#{eduModifyUser},</if>
+            <if test="eduCreateTime != null">#{eduCreateTime},</if>
+            <if test="eduModifyTime != null">#{eduModifyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduIntegrate" parameterType="EduIntegrate">
+        update edu_integrate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduProjectName != null and eduProjectName != ''">edu_project_name = #{eduProjectName},</if>
+            <if test="eduProjectDescription != null and eduProjectDescription != ''">edu_project_description = #{eduProjectDescription},</if>
+            <if test="eduProjectType != null">edu_project_type = #{eduProjectType},</if>
+            <if test="eduProjectField != null and eduProjectField != ''">edu_project_field = #{eduProjectField},</if>
+            <if test="eduPublisher != null and eduPublisher != ''">edu_publisher = #{eduPublisher},</if>
+            <if test="eduContact != null and eduContact != ''">edu_contact = #{eduContact},</if>
+            <if test="eduOfficialWebsite != null">edu_official_website = #{eduOfficialWebsite},</if>
+            <if test="eduStartTime != null">edu_start_time = #{eduStartTime},</if>
+            <if test="eduEndTime != null">edu_end_time = #{eduEndTime},</if>
+            <if test="eduCreateUser != null">edu_create_user = #{eduCreateUser},</if>
+            <if test="eduModifyUser != null">edu_modify_user = #{eduModifyUser},</if>
+            <if test="eduCreateTime != null">edu_create_time = #{eduCreateTime},</if>
+            <if test="eduModifyTime != null">edu_modify_time = #{eduModifyTime},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduIntegrateByEduId" parameterType="Long">
+        delete from edu_integrate where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduIntegrateByEduIds" parameterType="String">
+        delete from edu_integrate where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

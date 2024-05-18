@@ -2,8 +2,9 @@ package com.iedu.service.mapper;
 
 import java.util.List;
 import com.iedu.service.domain.EduRecruit;
-import com.iedu.service.domain.RecruitVO;
+import com.iedu.service.domain.VO.RecruitVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 招聘信息Mapper接口
@@ -65,4 +66,8 @@ public interface EduRecruitMapper
     List<RecruitVO> selectEduRecruitVOList();
 
     RecruitVO selectEduRecruitDetailById(int id);
+
+    List<com.iedu.service.domain.VO.RecruitVO> selectByKeyWord(@Param("text") String text, @Param("pageSize") int pageNum, @Param("offset") int offset);
+
+    int selectCountByKeyWord(String text);
 }

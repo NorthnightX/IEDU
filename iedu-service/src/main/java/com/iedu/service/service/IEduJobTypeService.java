@@ -2,7 +2,7 @@ package com.iedu.service.service;
 
 import java.util.List;
 import com.iedu.service.domain.EduJobType;
-import com.iedu.service.domain.JobTypeVO;
+import com.iedu.service.domain.VO.JobTypeVO;
 
 /**
  * 工作类型Service接口

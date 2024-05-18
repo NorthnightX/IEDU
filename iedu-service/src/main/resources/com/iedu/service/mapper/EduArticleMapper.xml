@@ -40,7 +40,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectEduArticleVo"/>
         where edu_id = #{eduId}
     </select>
-        
+    <select id="selectByKeyWord" resultMap="EduArticleResult">
+        select edu_id, edu_title, edu_publish_time, edu_content, edu_organize, edu_organize_type from edu_article
+        <where>
+            edu_title like #{text}
+            limit #{pageSize}
+            offset #{offset}
+        </where>
+    </select>
+    <select id="selectCountByKeyWord" resultType="java.lang.Integer">
+        select count(1) from edu_article
+        <where>
+            edu_title like #{text}
+        </where>
+    </select>
+
     <insert id="insertEduArticle" parameterType="EduArticle" useGeneratedKeys="true" keyProperty="eduId">
         insert into edu_article
         <trim prefix="(" suffix=")" suffixOverrides=",">

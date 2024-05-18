@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduCarouselMapper">
+    
+    <resultMap type="EduCarousel" id="EduCarouselResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduLink"    column="edu_link"    />
+        <result property="eduTarget"    column="edu_target"    />
+        <result property="eduCreateTime"    column="edu_create_time"    />
+        <result property="eduModifyTime"    column="edu_modify_time"    />
+        <result property="eduCreateUser"    column="edu_create_user"    />
+        <result property="eduModifyUser"    column="edu_modify_user"    />
+    </resultMap>
+
+    <sql id="selectEduCarouselVo">
+        select edu_id, edu_link, edu_target, edu_create_time, edu_modify_time, edu_create_user, edu_modify_user from edu_carousel
+    </sql>
+
+    <select id="selectEduCarouselList" parameterType="EduCarousel" resultMap="EduCarouselResult">
+        <include refid="selectEduCarouselVo"/>
+        <where>  
+            <if test="eduLink != null  and eduLink != ''"> and edu_link = #{eduLink}</if>
+            <if test="eduTarget != null  and eduTarget != ''"> and edu_target = #{eduTarget}</if>
+            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
+            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
+            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
+            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduCarouselByEduId" parameterType="Long" resultMap="EduCarouselResult">
+        <include refid="selectEduCarouselVo"/>
+        where edu_id = #{eduId}
+    </select>
+        
+    <insert id="insertEduCarousel" parameterType="EduCarousel" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_carousel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduLink != null">edu_link,</if>
+            <if test="eduTarget != null">edu_target,</if>
+            <if test="eduCreateTime != null">edu_create_time,</if>
+            <if test="eduModifyTime != null">edu_modify_time,</if>
+            <if test="eduCreateUser != null">edu_create_user,</if>
+            <if test="eduModifyUser != null">edu_modify_user,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduLink != null">#{eduLink},</if>
+            <if test="eduTarget != null">#{eduTarget},</if>
+            <if test="eduCreateTime != null">#{eduCreateTime},</if>
+            <if test="eduModifyTime != null">#{eduModifyTime},</if>
+            <if test="eduCreateUser != null">#{eduCreateUser},</if>
+            <if test="eduModifyUser != null">#{eduModifyUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduCarousel" parameterType="EduCarousel">
+        update edu_carousel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduLink != null">edu_link = #{eduLink},</if>
+            <if test="eduTarget != null">edu_target = #{eduTarget},</if>
+            <if test="eduCreateTime != null">edu_create_time = #{eduCreateTime},</if>
+            <if test="eduModifyTime != null">edu_modify_time = #{eduModifyTime},</if>
+            <if test="eduCreateUser != null">edu_create_user = #{eduCreateUser},</if>
+            <if test="eduModifyUser != null">edu_modify_user = #{eduModifyUser},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduCarouselByEduId" parameterType="Long">
+        delete from edu_carousel where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduCarouselByEduIds" parameterType="String">
+        delete from edu_carousel where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

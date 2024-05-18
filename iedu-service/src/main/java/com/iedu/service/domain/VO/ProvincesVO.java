@@ -1,4 +1,4 @@
-package com.iedu.service.domain;
+package com.iedu.service.domain.VO;
 
 
 import java.util.List;
