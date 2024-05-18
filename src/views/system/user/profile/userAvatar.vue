@@ -1,6 +1,6 @@
 <template>
   <div class="user-info-head" @click="editCropper()">
-    <img :src="options.img" title="点击上传头像" class="img-circle img-lg" />
+    <img :src="options.img" title="点击上传头像" class="img-circle img-lg"  alt="" style="width: 100%;height: 100%"/>
     <el-dialog :title="title" v-model="open" width="800px" append-to-body @opened="modalOpened" @close="closeDialog">
       <el-row>
         <el-col :xs="24" :md="12" :style="{ height: '350px' }">
@@ -34,7 +34,7 @@
           >
             <el-button>
               选择
-              <el-icon class="el-icon--right"><Upload /></el-icon>
+              <el-icon class="el-icon--right"><Upload/></el-icon>
             </el-button>
           </el-upload>
         </el-col>
@@ -152,7 +152,6 @@ function closeDialog() {
 }
 
 .user-info-head:hover:after {
-  content: "+";
   position: absolute;
   left: 0;
   right: 0;

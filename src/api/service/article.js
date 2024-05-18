@@ -48,3 +48,10 @@ export function getCurrentArticle(){
     method: 'get'
   })
 }
+export function getArticlePageBySearchText(params){
+  return request({
+    url: '/service/article/u/getArticleByKeyword',
+    method: 'get',
+    params: params
+  })
+}

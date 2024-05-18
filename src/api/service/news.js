@@ -49,3 +49,10 @@ export function getCurrentNews(eduId) {
     method: 'get'
   })
 }
+export function getNewsPageBySearchText(params){
+  return request({
+    url: '/service/news/u/getNewsByKeyword',
+    method: 'get',
+    params: params
+  })
+}

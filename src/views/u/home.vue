@@ -9,6 +9,10 @@ import {listAllType} from "@/api/service/type.js";
 import {getDistrictList} from "@/api/service/provinces.js";
 import {Search} from "@element-plus/icons-vue";
 import {getCurrentArticle} from "@/api/service/article.js";
+import {getAllIntegrateType} from "@/api/service/integrateType.js";
+import {getIntegrateList} from "@/api/service/integrate.js";
+import {getAllCarousel} from "@/api/service/carousel.js";
+import ImagePreview from "@/components/ImagePreview/index.vue";
 
 const newsList = ref([])
 const articleList = ref([])
@@ -17,9 +21,15 @@ const searchForm = ref({
   eduJobTypeId:"",
 
 })
+const carouselList = ref([])
+const integrateTypeList = ref([])
+const integrateList = ref([])
 const cityList = ref([])
 const typeList = ref([])
 const jobList = ref([])
+const integrateSearchForm = ref({
+     eduProjectType: ""
+})
 function getNews() {
   getCurrentNews().then((res) => {
     newsList.value = res.data
@@ -52,6 +62,28 @@ function toArticle(id, type) {
 function toRecruit(id){
   router.push({ path: '/u/recruit', query: { eduId: id } });
 }
+function getIntegrateTypeList(){
+  getAllIntegrateType().then((res) => {
+    integrateTypeList.value = res.data
+  })
+}
+
+function getIntegrateListByType(){
+  getIntegrateList(integrateSearchForm.value).then((res) => {
+    integrateList.value = res.rows
+  })
+}
+function getCarouselList(){
+  getAllCarousel().then((res) => {
+    carouselList.value = res.data
+  })
+}
+function toIntegrate(id){
+  router.push({ path: '/u/integrate', query: { eduId: id } });
+}
+getCarouselList()
+getIntegrateListByType()
+getIntegrateTypeList()
 getNews();
 getJob();
 getCity();
@@ -64,9 +96,9 @@ getArticle();
     <top></top>
     <div style="margin: 20px 7%;">
       <!--    轮播图   -->
-      <el-carousel indicator-position="outside" height="350px" style="margin: 20px 20px">
-        <el-carousel-item v-for="item in 4" :key="item">
-          <h3>这是轮播图</h3>
+      <el-carousel indicator-position="outside" style="margin: 20px 20px;" type="card" height="300px">
+        <el-carousel-item v-for="item in carouselList" :key="item.eduId">
+          <image-preview :src="item.eduLink" style="width:100%;height: 100%"></image-preview>
         </el-carousel-item>
       </el-carousel>
       <!--       新闻-->
@@ -162,6 +194,9 @@ getArticle();
               </template>
             </el-input>
           </div>
+          <div style="margin-left: 10px">
+            <el-button :icon="Search">搜索</el-button>
+          </div>
         </el-row>
         <!-- 分割线-->
         <el-row style="width: 100%;padding: 20px 20px 0 20px">
@@ -193,8 +228,55 @@ getArticle();
         </div>
       </div>
       <!--        合作资源-->
-      <div style="margin: 20px 20px;height: 400px;background-color: white;border-radius: 15px">
-        这是合作资源
+      <div style="background-color: white;border-radius: 15px;margin: 20px 20px">
+        <h3 style="padding: 20px 0 0 20px;font-weight: bold">产教融合</h3>
+        <el-row style="padding: 0 0 0 20px">
+          <div>
+            <el-select
+                v-model="integrateSearchForm.eduProjectType"
+                placeholder="项目类型"
+                size="default"
+                style="width: 240px"
+            >
+              <el-option
+                  v-for="item in integrateTypeList"
+                  :key="item.eduId"
+                  :label="item.eduName"
+                  :value="item.eduId"
+              />
+            </el-select>
+          </div>
+          <div style="margin-left: 10px">
+            <el-button :icon="Search">搜索</el-button>
+          </div>
+        </el-row>
+        <!-- 分割线-->
+        <el-row style="width: 100%;padding: 20px 20px 0 20px">
+          <el-col style="background-color: whitesmoke;height: 2px">
+          </el-col>
+        </el-row>
+        <div style="display: flex;flex-wrap: wrap;align-items: center;justify-content: center">
+          <div v-for="(item, index) in integrateList"
+               :key="item.id"
+                   style="
+                   width: 100%;
+                   border-radius: 10px; height: 95px;margin: 10px">
+            <div style="margin: 10px 10px"  @click="toIntegrate(item.eduId)">
+              <div style="height: 30px;display: flex;justify-content: space-between">
+                <el-text size="large" style="font-weight: bolder"> {{item.eduProjectName}}</el-text>
+                <el-tag size="default">
+                  {{item.eduProjectField}}
+                </el-tag>
+              </div>
+              <div style="margin-top: 5px;">
+                <el-tag size="large" type="success">
+                  起止时间：{{item.eduStartTime}} - {{item.eduEndTime}}
+                </el-tag>
+              </div>
+              <el-divider v-if="index !== integrateList.length - 1"></el-divider>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <bottom></bottom>

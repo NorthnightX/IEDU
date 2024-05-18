@@ -55,3 +55,10 @@ export function getRecruitDetails(eduId) {
     method: 'get'
   })
 }
+export function getRecruitByKeyWord(params){
+  return request({
+    url: '/service/recruit/u/getRecruitByKeyWord',
+    method: 'get',
+    params: params
+  })
+}

@@ -91,6 +91,16 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/u/profile',
+    component: () => import('@/views/u/profile.vue'),
+    hidden: true
+  },
+  {
+    path: '/u/integrate',
+    component: () => import('@/views/u/integrate.vue'),
+    hidden: true
+  },
+  {
     path: '/user',
     component: Layout,
     hidden: true,

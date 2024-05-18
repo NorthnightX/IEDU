@@ -2,6 +2,7 @@
 import {Search} from '@element-plus/icons-vue'
 import {ref} from 'vue'
 import useUserStore from '@/store/modules/user'
+import {logout} from "@/api/login.js";
 
 const userStore = useUserStore()
 const route = useRoute();
@@ -56,7 +57,17 @@ function handleLogin() {
 function toSearch() {
   router.push({path: '/u/search', query: {text: searchText.value}});
 }
-
+function toHome(){
+  router.push({path: '/u/home'})
+}
+function accountLogout(){
+  userStore.logOut().then(() => {
+    location.href = '/u/home';
+  })
+}
+function toProfile(){
+  router.push({path: '/u/profile'});
+}
 userStore.getInfo()
 </script>
 
@@ -73,7 +84,7 @@ userStore.getInfo()
     </div>
     <div style="align-items: center;justify-content: left;display: flex;">
       <div style="margin: 0 20px;">
-        <el-button style="font-size: 16px;color: #181818" type="text">首页</el-button>
+        <el-button style="font-size: 16px;color: #181818" type="text" @click="toHome()">首页</el-button>
         <el-button class="home_menu_button" type="text">新闻</el-button>
         <el-button class="home_menu_button" type="text">动态</el-button>
         <el-button class="home_menu_button" type="text">求职</el-button>
@@ -96,13 +107,19 @@ userStore.getInfo()
       </div>
     </div>
     <div style="align-items: center;display: flex;justify-content: center;margin-right: 3%">
-      <div v-if="userStore.name.length === 0">
-        <el-button class="home-login-button" type="text" @click="showLoginForm">登录</el-button>
-      </div>
-      <div v-else style="align-items: center;display: flex;justify-content: center;">
-        <el-avatar :src="userStore.avatar">
-        </el-avatar>
-      </div>
+      <el-button v-if="userStore.name.length === 0" class="home-login-button" type="text" @click="showLoginForm">登录</el-button>
+      <el-dropdown
+          v-else
+          trigger="click"
+      >
+        <el-avatar :src="userStore.avatar"/>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="toProfile()">个人中心</el-dropdown-item>
+            <el-dropdown-item  @click="accountLogout()">账号登出</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
   <el-dialog width="550px" v-model="loginFormVisible" style="border-radius: 10px">
@@ -202,7 +219,9 @@ userStore.getInfo()
 
 }
 
+.avatar-dropDown {
 
+}
 /*登录输入框1*/
 .login_input_1 {
   & :deep(.el-input-group__prepend) {
