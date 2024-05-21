@@ -48,3 +48,9 @@ export function getAddressByCompany(companyId) {
     method: 'get'
   })
 }
+export function getAddressVOAsListByCompany(companyId) {
+  return request({
+    url: '/service/address/getAddressVOAsListByCompany/' + companyId,
+    method: 'get'
+  })
+}

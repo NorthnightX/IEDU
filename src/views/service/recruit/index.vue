@@ -17,22 +17,6 @@
             @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="工作类型" prop="eduJobTypeId">
-        <el-select
-            v-model="queryParams.eduJobTypeId"
-            placeholder="请选择工作类型"
-            style="width: 240px"
-        >
-        </el-select>
-      </el-form-item>
-      <el-form-item label="城市" prop="eduCityId">
-        <el-input
-            v-model="queryParams.eduCityId"
-            placeholder="请输入城市"
-            clearable
-            @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -88,16 +72,22 @@
     <el-table v-loading="loading" :data="recruitList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="Id" align="center" prop="eduId"/>
-      <el-table-column label="公司Id" align="center" prop="eduCompanyId"/>
+      <el-table-column label="公司名" align="center" prop="companyName"/>
       <el-table-column label="名称" align="center" prop="eduJobName"/>
-      <el-table-column label="工作类型" align="center" prop="eduJobTypeId"/>
-      <el-table-column label="城市" align="center" prop="eduCityId"/>
-      <el-table-column label="学历要求" align="center" prop="eduEduId"/>
-      <el-table-column label="经验要求" align="center" prop="eduExpId"/>
+      <el-table-column label="工作类型" align="center" prop="jobTypeName"/>
+      <el-table-column label="城市" align="center" prop="cityName"/>
+      <el-table-column label="学历要求" align="center" prop="eduName"/>
+      <el-table-column label="经验要求" align="center" prop="expName"/>
       <el-table-column label="薪资范围" align="center" prop="eduSalary"/>
       <el-table-column label="福利待遇" align="center" prop="eduWelfare"/>
       <el-table-column label="职位tag" align="center" prop="eduIntroduceTag"/>
-      <el-table-column label="职位详情" align="center" prop="eduIntroduce"/>
+      <el-table-column label="职位详情" align="center" prop="eduIntroduce" width="120px">
+        <template #default="{ row }">
+          <el-button type="text" @click="showDetailDialog(row.eduIntroduce)">
+            点击查看详情
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="开始时间" align="center" prop="eduStartTime" width="180">
         <template #default="scope">
           <span>{{ parseTime(scope.row.eduStartTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -227,6 +217,7 @@ import {listAllRequirement} from "@/api/service/requirement.js";
 import {listAllType} from "@/api/service/type.js";
 import {getDistrictList} from "@/api/service/provinces.js";
 import {getUserCompany} from "@/api/service/user.js";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const {proxy} = getCurrentInstance();
 const provincesList = ref([]);
@@ -327,12 +318,30 @@ function handleSelectionChange(selection) {
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
-
+function showDetailDialog(content){
+  ElMessageBox.alert(
+      content,
+      "内容",
+      {
+        dangerouslyUseHTMLString: true,
+        customStyle: {'max-width': '70%'}
+      }
+  )
+}
 /** 新增按钮操作 */
 function handleAdd() {
   reset();
-  open.value = true;
-  title.value = "添加招聘信息";
+  getUserCompany(useUserStore().id).then((res) => {
+    if(res.data === -1){
+      ElMessage({
+        message: '请先添加公司',
+        type: 'warning'
+      });
+      return
+    }
+    open.value = true;
+    title.value = "添加招聘信息";
+  })
 }
 
 /** 修改按钮操作 */

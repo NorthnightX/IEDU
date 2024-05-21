@@ -86,12 +86,30 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="id" align="center" prop="eduId"/>
       <el-table-column label="公司名" align="center" prop="eduCompanyName"/>
-      <el-table-column label="公司规模" align="center" prop="eduCompanyScaleId"/>
-      <el-table-column label="公司行业" align="center" prop="eduCompanyIndustryId"/>
-      <el-table-column label="融资阶段" align="center" prop="eduFinancingStageId"/>
-      <el-table-column label="公司简介" align="center" prop="eduCompanyIntroduce"/>
-      <el-table-column label="公司详细信息" width="100" align="center" prop="eduInformationId"/>
-      <el-table-column label="公司地址" align="center" prop="eduAddressId"/>
+      <el-table-column label="公司规模" align="center" prop="eduCompanyScaleName"/>
+      <el-table-column label="公司行业" align="center" prop="eduCompanyIndustryName"/>
+      <el-table-column label="融资阶段" align="center" prop="eduFinancingStageName"/>
+      <el-table-column label="公司简介" align="center" prop="eduCompanyIntroduce" width="120px">
+        <template #default="{ row }">
+          <el-button type="text" @click="showDetailDialog(row.eduCompanyIntroduce)">
+            点击查看详情
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="公司详细信息" width="120" align="center" prop="eduInformationId">
+        <template #default="{ row }">
+          <el-button type="text" @click="showInformationDialog(row.eduInformationId)">
+            查看工商信息
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="公司地址" align="center" prop="eduAddressId" width="120px">
+        <template #default="{ row }">
+          <el-button type="text" @click="showAddressDialog(row.eduId)">
+            查看详细地址
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="创建人" align="center" prop="eduCreateUser"/>
       <el-table-column label="修改人" align="center" prop="eduModifyUser"/>
       <el-table-column label="创建时间" align="center" prop="eduCreateTime" width="180">
@@ -244,6 +262,35 @@
         </div>
       </template>
     </el-dialog>
+    <el-dialog v-model="informationDialogVisible" width="800">
+      <el-table :data="informationDialogData">
+        <el-table-column label="法定代表人" width="90" align="center" prop="eduLegalRepresentative" />
+        <el-table-column label="企业类型" align="center" prop="eduEnterpriseType" />
+        <el-table-column label="注册资本" align="center" prop="eduRegisteredCapital" />
+        <el-table-column label="社会统一信用码" width="110" align="center" prop="eduSocialCreditCode" />
+        <el-table-column label="经营期限 " align="center" prop="eduOperatingPeriod" />
+        <el-table-column label="所属地区" align="center" prop="eduArea" />
+        <el-table-column label="经营状态" align="center" prop="eduOperatingStatus" />
+        <el-table-column label="登记机关" align="center" prop="eduRegistrationAuthority" />
+        <el-table-column label="注册地址" align="center" prop="eduRegisteredAddress" />
+        <el-table-column label="成立时间" align="center" prop="eduEstablishmentDate" width="180">
+          <template #default="scope">
+            <span>{{ parseTime(scope.row.eduEstablishmentDate, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="经营范围 " align="center" prop="eduBusinessScope" />
+      </el-table>
+    </el-dialog>
+    <el-dialog v-model="addressDialogVisible" width="800">
+      <el-table :data="addressDialogData">
+        <el-table-column label="公司" align="center" prop="companyName" />
+        <el-table-column label="国家" align="center" prop="eduCountryName" />
+        <el-table-column label="省" align="center" prop="eduProvinceName" />
+        <el-table-column label="市" align="center" prop="eduCityName" />
+        <el-table-column label="区" align="center" prop="eduDistrictName" />
+        <el-table-column label="详细地址" align="center" prop="eduDetailedAddress" />
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -252,9 +299,19 @@ import {listCompany, getCompany, delCompany, addCompany, updateCompany} from "@/
 import {listScale} from "@/api/service/scale.js";
 import {listStage} from "@/api/service/stage.js";
 import {listIndustryHaveChild} from "@/api/service/industry.js";
-import {addInformation, getInformationByCompany, updateInformation} from "@/api/service/information.js";
-import {addAddress, getAddressByCompany, updateAddress} from "@/api/service/address.js";
+import {
+  addInformation,
+  getInformationAsListByCompany,
+  getInformationByCompany,
+  updateInformation
+} from "@/api/service/information.js";
+import {addAddress, getAddressByCompany, getAddressVOAsListByCompany, updateAddress} from "@/api/service/address.js";
 import {getDistrictList} from "@/api/service/provinces.js";
+import {ElMessageBox} from "element-plus";
+const informationDialogVisible = ref(false)
+const informationDialogData = ref([])
+const addressDialogVisible = ref(false)
+const addressDialogData = ref([])
 const districtIds = ref("");
 const districtList = ref([]);
 const addressTitle = ref("");
@@ -334,7 +391,18 @@ function reset() {
   };
   proxy.resetForm("companyRef");
 }
-
+function showInformationDialog(id) {
+  getInformationAsListByCompany(id).then((res) => {
+    informationDialogVisible.value = true
+    informationDialogData.value = res.data
+  })
+}
+function showAddressDialog(id){
+  getAddressVOAsListByCompany(id).then((res) => {
+    addressDialogVisible.value = true
+    addressDialogData.value = res.data
+  })
+}
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1;
@@ -353,7 +421,16 @@ function handleSelectionChange(selection) {
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
-
+function showDetailDialog(content){
+  ElMessageBox.alert(
+      content,
+      "内容",
+      {
+        dangerouslyUseHTMLString: true,
+        customStyle: {'max-width': '70%'}
+      }
+  )
+}
 /** 新增按钮操作 */
 function handleAdd() {
   reset();

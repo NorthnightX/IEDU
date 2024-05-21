@@ -9,22 +9,6 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="发布者" prop="eduPublisher">
-        <el-input
-          v-model="queryParams.eduPublisher"
-          placeholder="请输入发布者"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="发布时间" prop="eduPublishTime">
-        <el-date-picker clearable
-          v-model="queryParams.eduPublishTime"
-          type="date"
-          value-format="YYYY-MM-DD"
-          placeholder="请选择发布时间">
-        </el-date-picker>
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -206,6 +190,7 @@ function showDetailDialog(content){
       "新闻内容",
       {
         dangerouslyUseHTMLString: true,
+        customStyle: {'max-width': '70%'}
       }
   )
 }

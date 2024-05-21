@@ -6,29 +6,26 @@ import {ref} from "vue";
 import router from "@/router/index.js";
 import {getRecruitToExhibit} from "@/api/service/recruit.js";
 import {listAllType} from "@/api/service/type.js";
-import {getDistrictList} from "@/api/service/provinces.js";
 import {Search} from "@element-plus/icons-vue";
 import {getCurrentArticle} from "@/api/service/article.js";
 import {getAllIntegrateType} from "@/api/service/integrateType.js";
-import {getIntegrateList} from "@/api/service/integrate.js";
+import {getCurrentIntegrateList, getIntegrateList, getIntegratesByCondition} from "@/api/service/integrate.js";
 import {getAllCarousel} from "@/api/service/carousel.js";
 import ImagePreview from "@/components/ImagePreview/index.vue";
-
 const newsList = ref([])
 const articleList = ref([])
 const searchForm = ref({
-  eduCityId:"",
-  eduJobTypeId:"",
-
+  eduJobTypeId:[1],
+  eduJobName:"",
 })
 const carouselList = ref([])
 const integrateTypeList = ref([])
 const integrateList = ref([])
-const cityList = ref([])
 const typeList = ref([])
 const jobList = ref([])
 const integrateSearchForm = ref({
-     eduProjectType: ""
+     eduProjectType: 0,
+     eduProjectName: ""
 })
 function getNews() {
   getCurrentNews().then((res) => {
@@ -38,11 +35,6 @@ function getNews() {
 function getArticle(){
   getCurrentArticle().then((res) => {
     articleList.value = res.data
-  })
-}
-function getCity() {
-  getDistrictList().then((res) => {
-    cityList.value = res.data
   })
 }
 function getJobType() {
@@ -69,8 +61,8 @@ function getIntegrateTypeList(){
 }
 
 function getIntegrateListByType(){
-  getIntegrateList(integrateSearchForm.value).then((res) => {
-    integrateList.value = res.rows
+  getCurrentIntegrateList().then((res) => {
+    integrateList.value = res.data
   })
 }
 function getCarouselList(){
@@ -81,12 +73,27 @@ function getCarouselList(){
 function toIntegrate(id){
   router.push({ path: '/u/integrate', query: { eduId: id } });
 }
+function toIntegrateByCondition(){
+  if(integrateSearchForm.value.eduProjectName.length === 0){
+    return
+  }
+  router.push({ path: '/u/search', query: { integrateId: integrateSearchForm.value.eduProjectType, type: "integrate",
+      text: integrateSearchForm.value.eduProjectName} });
+}
+function toRecruitByCondition(){
+  let ids = searchForm.value.eduJobTypeId
+  if (searchForm.value.eduJobName.length === 0) {
+    return
+  }
+  router.push({ path: '/u/search',
+    query: { jobTypeIds: ids, text: searchForm.value.eduJobName, type: "recruit"
+    }});
+}
 getCarouselList()
 getIntegrateListByType()
 getIntegrateTypeList()
 getNews();
 getJob();
-getCity();
 getJobType();
 getArticle();
 </script>
@@ -174,28 +181,15 @@ getArticle();
             </el-cascader>
           </div>
           <div style="margin-left: 10px">
-            <el-cascader
-                size="default"
-                placeholder="全部地区"
-                :show-all-levels="false"
-                v-model="searchForm.eduCityId"
-                :options="cityList">
-            </el-cascader>
-          </div>
-          <div style="margin-left: 10px">
             <el-input
-                v-model="input1"
+                v-model="searchForm.eduJobName"
                 size="default"
-                class="recruit_input"
                 placeholder="请输入公司或职位名"
             >
-              <template #append>
-                <el-button :icon="Search"/>
-              </template>
             </el-input>
           </div>
           <div style="margin-left: 10px">
-            <el-button :icon="Search">搜索</el-button>
+            <el-button :icon="Search" @click="toRecruitByCondition()">搜索</el-button>
           </div>
         </el-row>
         <!-- 分割线-->
@@ -245,9 +239,15 @@ getArticle();
                   :value="item.eduId"
               />
             </el-select>
+            <el-input
+                v-model="integrateSearchForm.eduProjectName"
+                style="width: 200px;margin-left: 10px"
+                placeholder="请输入项目名"
+            >
+            </el-input>
           </div>
           <div style="margin-left: 10px">
-            <el-button :icon="Search">搜索</el-button>
+            <el-button :icon="Search" @click="toIntegrateByCondition()">搜索</el-button>
           </div>
         </el-row>
         <!-- 分割线-->
@@ -309,20 +309,6 @@ getArticle();
 .el-table {
   --el-table-row-hover-bg-color: white;
 }
-.recruit_input {
-  & :deep(.el-input-group__append) {
-    background-color: white;
-    box-shadow: 0 -1px 0 0 #E2E4E7,
-    1px 0 0 0 #E2E4E7,
-    0 1px 0 0 #E2E4E7;
-  }
 
-  & :deep(.el-input__wrapper) {
-    box-shadow: 0 -1px 0 0 #E2E4E7,
-    -1px 0 0 0 #E2E4E7,
-    1px 0 0 0 #E2E4E7,
-    0 1px 0 0 #E2E4E7;
-  }
-}
 
 </style>

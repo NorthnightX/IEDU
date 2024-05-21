@@ -48,3 +48,9 @@ export function getInformationByCompany(id) {
     method: 'get'
   })
 }
+export function getInformationAsListByCompany(id) {
+  return request({
+    url: '/service/information/getInfoAsList/' + id,
+    method: 'get'
+  })
+}

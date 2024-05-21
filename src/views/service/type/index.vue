@@ -1,14 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="父类型" prop="eduFaId">
-        <el-input
-          v-model="queryParams.eduFaId"
-          placeholder="请输入父类型"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="名称" prop="eduName">
         <el-input
           v-model="queryParams.eduName"

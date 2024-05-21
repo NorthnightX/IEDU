@@ -80,8 +80,20 @@
       <el-table-column label="id" align="center" prop="eduId" />
       <el-table-column label="院校名" align="center" prop="eduAcademyName" />
       <el-table-column label="院校标签" align="center" prop="eduAcademyTag" />
-      <el-table-column label="院校介绍" align="center" prop="eduAcademyIntroduce" />
-      <el-table-column label="院校地址" align="center" prop="eduAddressId" />
+      <el-table-column label="院校介绍" align="center" prop="eduAcademyIntroduce">
+        <template #default="{ row }">
+          <el-button type="text" @click="showDetailDialog(row.eduAcademyIntroduce)">
+            点击查看详情
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="院校地址" align="center" prop="eduAddressId">
+        <template #default="{ row }">
+          <el-button type="text" @click="showAddressDialog(row.eduId)">
+            查看详细地址
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="创建人" align="center" prop="eduCreateUser" />
       <el-table-column label="修改人" align="center" prop="eduModifyUser" />
       <el-table-column label="创建时间" align="center" prop="eduCreateTime" width="180">
@@ -151,6 +163,16 @@
         </div>
       </template>
     </el-dialog>
+    <el-dialog v-model="addressDialogVisible" width="800">
+      <el-table :data="addressDialogData">
+        <el-table-column label="学校" align="center" prop="eduAcademyName" />
+        <el-table-column label="国家" align="center" prop="eduCountryName" />
+        <el-table-column label="省" align="center" prop="eduProvinceName" />
+        <el-table-column label="市" align="center" prop="eduCityName" />
+        <el-table-column label="区" align="center" prop="eduDistrictName" />
+        <el-table-column label="详细地址" align="center" prop="eduDetailedAddress" />
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -158,8 +180,15 @@
 import { listAcademy, getAcademy, delAcademy, addAcademy, updateAcademy } from "@/api/service/academy";
 import {getDistrictList} from "@/api/service/provinces.js";
 import {addAddress, updateAddress} from "@/api/service/address.js";
-import {addAcademyAddress, getAddressByAcademy, updateAcademyAddress} from "@/api/service/academyAddress.js";
-
+import {
+  addAcademyAddress,
+  getAddressByAcademy,
+  getAddressByAcademyAsList,
+  updateAcademyAddress
+} from "@/api/service/academyAddress.js";
+import {ElMessageBox} from "element-plus";
+const addressDialogVisible = ref(false)
+const addressDialogData = ref([])
 const { proxy } = getCurrentInstance();
 const districtList = ref([]);
 const addressForm = ref({});
@@ -211,7 +240,12 @@ function cancel() {
   open.value = false;
   reset();
 }
-
+function showAddressDialog(id){
+  getAddressByAcademyAsList(id).then((res) => {
+    addressDialogVisible.value = true
+    addressDialogData.value = res.data
+  })
+}
 // 表单重置
 function reset() {
   form.value = {
@@ -246,7 +280,16 @@ function handleSelectionChange(selection) {
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
-
+function showDetailDialog(content){
+  ElMessageBox.alert(
+      content,
+      "内容",
+      {
+        dangerouslyUseHTMLString: true,
+        customStyle: {'max-width': '70%'}
+      }
+  )
+}
 /** 新增按钮操作 */
 function handleAdd() {
   reset();

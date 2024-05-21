@@ -1,32 +1,59 @@
 <script setup>
 import top from  '@/components/header/header.vue'
 import bottom from '@/components/bottom/bottom.vue'
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import router from "@/router/index.js";
 import {useRoute} from "vue-router";
 import {Search} from "@element-plus/icons-vue";
 import {getNewsPageBySearchText} from "@/api/service/news.js";
 import {getArticlePageBySearchText} from "@/api/service/article.js";
-import {getRecruitByKeyWord} from "@/api/service/recruit.js";
-import {getIntegrateByKeyWord} from "@/api/service/integrate.js";
+import {getRecruitByCondition,} from "@/api/service/recruit.js";
+import {getIntegratesByCondition} from "@/api/service/integrate.js";
+import {getAllIntegrateType} from "@/api/service/integrateType.js";
+import {listAllType} from "@/api/service/type.js";
+const menuIdx = ref(1)
 const searchText = ref("")
 const pageNum = ref(1)
 const pageSize = ref(10)
 const totalNum = ref(1)
 const route = useRoute();
+const jobTypeList = ref([]) // 工作类型集合
 const pageList = ref([])
 const pageType = ref("")
+const integrateTypeList = ref([]) // 产教融合类型集合
+const eduProjectType= ref(0) // 默认选中产教融合类型
+const eduJobTypeId = ref([1]) // 默认选中工作类型id
+
+function getIntegrateTypeList(){
+  getAllIntegrateType().then((res) => {
+    integrateTypeList.value = res.data
+  })
+}
 onMounted(() => {
   searchText.value = router.currentRoute.value.query.text;
-  searchNews()
+  switch (router.currentRoute.value.query.type) {
+    case "integrate" :
+      menuIdx.value = 4
+      eduProjectType.value = router.currentRoute.value.query.integrateId
+      searchIntegrate(1)
+      break
+    case "recruit":
+      menuIdx.value = 3
+      eduJobTypeId.value = router.currentRoute.value.query.jobTypeIds
+      searchRecruit(1)
+      break
+    default:
+      searchNews(1)
+  }
 })
 watch(() => route.query.text, (newValue, oldValue) => {
   searchText.value = newValue
 });
 
-function searchNews(isFirst){
+function searchNews(page){
   pageType.value = "news"
-  ResetPage(isFirst)
+  pageNum.value = page
+  pageList.value = null
   if(searchText.value.length === 0){
     return
   }
@@ -36,49 +63,56 @@ function searchNews(isFirst){
   })
 }
 
-function searchArticle(isFirst){
+function searchArticle(page){
   pageType.value = "article"
-  ResetPage(isFirst)
+  pageNum.value = page
+  pageList.value = null
   getArticlePageBySearchText({text: searchText.value, pageSize: pageSize.value, pageNum : pageNum.value}).then((res) => {
     pageList.value = res.data.data
     totalNum.value = res.data.total
   })
 }
-function searchRecruit(isFirst){
+function searchRecruit(page){
   pageType.value = "recruit"
-  ResetPage(isFirst)
-  getRecruitByKeyWord({text: searchText.value, pageSize: pageSize.value, pageNum : pageNum.value}).then((res) => {
-    pageList.value =res.data.data
-    totalNum.value = res.data.total
-  })
-}
-function searchIntegrate(isFirst){
-  pageType.value = "integrate"
-  ResetPage(isFirst)
-  getIntegrateByKeyWord({text: searchText.value, pageSize: pageSize.value, pageNum : pageNum.value}).then((res) => {
-    pageList.value =res.data.data
-    totalNum.value = res.data.total
-  })
-}
-function ResetPage(isFirst){
-  if (isFirst) {
-    pageNum.value = 1
+  pageNum.value = page
+  pageList.value = null
+  if(searchText.value.length === 0 || eduJobTypeId.value.length === 0){
+    return
   }
+  let tIds = eduJobTypeId.value
+  getRecruitByCondition({jobTypeId: tIds[tIds.length-1], text: searchText.value,
+    pageSize: pageSize.value, pageNum : pageNum.value}).then((res) => {
+    pageList.value =res.data.data
+    totalNum.value = res.data.total
+  })
+}
+function searchIntegrate(page){
+  pageType.value = "integrate"
+  pageList.value = null
+  pageNum.value = page
+  if(searchText.value.length === 0 || eduProjectType.value.length === 0){
+    return
+  }
+  getIntegratesByCondition({keyword: searchText.value, typeId: eduProjectType.value ,
+    pageSize: pageSize.value, pageNum : pageNum.value}).then((res) => {
+    pageList.value =res.data.data
+    totalNum.value = res.data.total
+  })
 }
 function changePage(newPage){
   pageNum.value = newPage
   switch (pageType.value){
     case "news":
-      searchNews(false);
+      searchNews(newPage);
       break;
     case "article":
-      searchArticle(false);
+      searchArticle(newPage);
       break;
     case "recruit":
-      searchRecruit(false);
+      searchRecruit(newPage);
       break;
     case "integrate":
-      searchIntegrate(false);
+      searchIntegrate(newPage);
       break;
   }
 }
@@ -95,19 +129,26 @@ function searchInformation(){
   pageNum.value = 1
   switch (pageType.value){
     case "news":
-      searchNews(false);
+      searchNews(1);
       break;
     case "article":
-      searchArticle(false);
+      searchArticle(1);
       break;
     case "recruit":
-      searchRecruit(false);
+      searchRecruit(1);
       break;
     case "integrate":
-      searchIntegrate(false);
+      searchIntegrate(1);
       break;
   }
 }
+function getJobType() {
+  listAllType().then((res) => {
+    jobTypeList.value = res.data
+  })
+}
+getIntegrateTypeList()
+getJobType()
 </script>
 
 <template>
@@ -119,6 +160,29 @@ function searchInformation(){
           <div style=";width: 88%;background-color: white;margin: 5px;border-radius: 10px;display: flex;justify-content: center">
             <div style="margin-top: 20px;width: 95%;flex-direction: column;padding: 5px 0;position: relative;">
               <el-input size="large" class="searchPage-input" :placeholder="searchText" v-model="searchText">
+                <template v-if="pageType === 'integrate'" #prepend>
+                  <el-select
+                      v-model="eduProjectType"
+                      placeholder="项目类型"
+                      style="width: 240px;border: none"
+                  >
+                    <el-option
+                        v-for="item in integrateTypeList"
+                        :key="item.eduId"
+                        :label="item.eduName"
+                        :value="item.eduId"
+                    />
+                  </el-select>
+                </template>
+                <template v-if="pageType === 'recruit'" #prepend>
+                  <el-cascader
+                      size="default"
+                      placeholder="全部职位"
+                      :show-all-levels="false"
+                      v-model="eduJobTypeId"
+                      :options="jobTypeList">
+                  </el-cascader>
+                </template>
                 <template #append>
                   <el-button :icon="Search" style="color:#1ab394" @click="searchInformation()">搜索</el-button>
                 </template>
@@ -127,12 +191,12 @@ function searchInformation(){
                 <el-menu
                     class="search-menu"
                     mode="horizontal"
-                    default-active="1"
+                    :default-active=menuIdx
                 >
-                  <el-menu-item index="1" style="font-size: 18px" @click="searchNews(true)">新闻</el-menu-item>
-                  <el-menu-item index="2" style="font-size: 18px" @click="searchArticle(true)">动态</el-menu-item>
-                  <el-menu-item index="3" style="font-size: 18px" @click="searchRecruit(true)">招聘</el-menu-item>
-                  <el-menu-item index="4" style="font-size: 18px" @click="searchIntegrate(true)">产教融合</el-menu-item>
+                  <el-menu-item index="1" style="font-size: 18px" @click="searchNews(1)">新闻</el-menu-item>
+                  <el-menu-item index="2" style="font-size: 18px" @click="searchArticle(1)">动态</el-menu-item>
+                  <el-menu-item index="3" style="font-size: 18px" @click="searchRecruit(1)">招聘</el-menu-item>
+                  <el-menu-item index="4" style="font-size: 18px" @click="searchIntegrate(1)">产教融合</el-menu-item>
                 </el-menu>
               </div>
 <!--              新闻，动态-->
@@ -192,7 +256,7 @@ function searchInformation(){
                   <div style="display: flex;justify-content: space-between">
                     <div>
                       <el-tag>{{item.eduProjectTypeName}}</el-tag>
-                      <el-text>{{item.eduProjectName}}</el-text>
+                      <el-text style="margin-left: 5px">{{item.eduProjectName}}</el-text>
                     </div>
                     <div>
                       <el-text size="large" style="color: grey">{{item.eduPublisher}}</el-text>
@@ -240,8 +304,12 @@ function searchInformation(){
     1px 0 0 0 #F8F8F8,
     0 1px 0 0 #F8F8F8;
   }
-
-
+  & :deep(.el-input-group__prepend) {
+    background-color: #F8F8F8;
+    box-shadow: 0 -1px 0 0 #F8F8F8,
+    1px 0 0 0 #F8F8F8,
+    0 1px 0 0 #F8F8F8;
+  }
   & :deep(.el-input__wrapper) {
     background-color: #F8F8F8;
     box-shadow: 0 -1px 0 0 #F8F8F8,
@@ -252,5 +320,8 @@ function searchInformation(){
 }
 .search-menu {
 
+}
+.el-select {
+  --el-select-input-focus-border-color: none
 }
 </style>

@@ -171,12 +171,6 @@
         </div>
       </template>
     </el-dialog>
-
-    <el-dialog v-model="messageDialogVisible" title="详细内容" width="1500" center>
-    <span>
-      {{messageDialogText}}
-    </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -186,8 +180,6 @@ import {getAllIntegrateType, listIntegrateType} from "@/api/service/integrateTyp
 import {ElMessageBox} from "element-plus";
 
 const { proxy } = getCurrentInstance();
-const messageDialogVisible = ref(false)
-const messageDialogText = ref("")
 const integrateList = ref([]);
 const open = ref(false);
 const loading = ref(true);
@@ -353,8 +345,14 @@ function handleDelete(row) {
   }).catch(() => {});
 }
 function showDetailDialog(content){
-  messageDialogVisible.value = true
-  messageDialogText.value = content
+  ElMessageBox.alert(
+      content,
+      "内容",
+      {
+        dangerouslyUseHTMLString: true,
+        customStyle: {'max-width': '70%'}
+      }
+  )
 }
 /** 导出按钮操作 */
 function handleExport() {

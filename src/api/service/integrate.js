@@ -49,17 +49,23 @@ export function getIntegrateList(query){
     params: query
   })
 }
-
-export function getIntegrateByKeyWord(params){
+export function getIntegrateDetails(eduId){
   return request({
-    url: '/service/integrate/u/getIntegrateByKeyWord',
+    url: '/service/integrate/u/getIntegrateById/' + eduId,
+    method: 'get',
+  })
+}
+
+export function getIntegratesByCondition(params){
+  return request({
+    url: '/service/integrate/u/getIntegrateByCondition',
     method: 'get',
     params: params
   })
 }
-export function getIntegrateDetails(eduId){
+export function getCurrentIntegrateList(){
   return request({
-    url: '/service/integrate/u/getIntegrateById/' + eduId,
+    url: '/service/integrate/u/getCurrentIntegrateList',
     method: 'get',
   })
 }

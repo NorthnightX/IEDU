@@ -12,7 +12,7 @@ export function listArticle(query) {
 // 查询动态详细
 export function getArticle(eduId) {
   return request({
-    url: '/service/article/' + eduId,
+    url: '/service/article/u/' + eduId,
     method: 'get'
   })
 }

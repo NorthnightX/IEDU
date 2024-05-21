@@ -11,30 +11,6 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="法定代表人" prop="eduLegalRepresentative">
-        <el-input
-          v-model="queryParams.eduLegalRepresentative"
-          placeholder="请输入法定代表人"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="社会统一信用码" prop="eduSocialCreditCode">
-        <el-input
-          v-model="queryParams.eduSocialCreditCode"
-          placeholder="请输入社会统一信用码"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="所属地区" prop="eduArea">
-        <el-input
-          v-model="queryParams.eduArea"
-          placeholder="请输入所属地区"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>

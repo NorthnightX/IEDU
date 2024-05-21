@@ -9,22 +9,6 @@
             @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="发布时间" prop="eduPublishTime">
-        <el-date-picker clearable
-                        v-model="queryParams.eduPublishTime"
-                        type="datetime"
-                        value-format="YYYY-MM-DD HH:mm:ss"
-                        placeholder="请选择发布时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="发布组织" prop="eduOrganize">
-        <el-input
-            v-model="queryParams.eduOrganize"
-            placeholder="请输入发布组织"
-            clearable
-            @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -92,7 +76,7 @@
           <span>{{ parseTime(scope.row.eduPublishTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="内容" align="center" prop="eduContent">
+      <el-table-column label="内容" align="center" prop="eduContent" width="120px">
         <template #default="{ row }">
           <el-button type="text" @click="showDetailDialog(row.eduContent)">
             点击查看详情
@@ -100,7 +84,11 @@
         </template>
       </el-table-column>
       <el-table-column label="发布组织" align="center" prop="eduOrganize"/>
-      <el-table-column label="组织类别" align="center" prop="eduOrganizeType"/>
+      <el-table-column label="组织类别" align="center" prop="eduOrganizeType">
+        <template #default="scope">
+          <span>{{ scope.row.eduOrganizeType === 0 ? "公司" : "院校" }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="创建者" align="center" prop="eduCreateUser"/>
       <el-table-column label="修改者" align="center" prop="eduModifyUser"/>
       <el-table-column label="创建时间" align="center" prop="eduCreateTime" width="180">
@@ -179,7 +167,6 @@ import {listArticle, getArticle, delArticle, addArticle, updateArticle} from "@/
 import {ElMessageBox} from "element-plus";
 
 const {proxy} = getCurrentInstance();
-
 const articleList = ref([]);
 const open = ref(false);
 const loading = ref(true);
@@ -241,6 +228,7 @@ function showDetailDialog(content){
       "新闻内容",
       {
         dangerouslyUseHTMLString: true,
+        customStyle: {'max-width': '70%'}
       }
   )
 }

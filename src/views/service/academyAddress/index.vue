@@ -51,11 +51,11 @@
     <el-table v-loading="loading" :data="academyAddressList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="eduId" />
-      <el-table-column label="学校id" align="center" prop="eduAcademyId" />
-      <el-table-column label="国家" align="center" prop="eduCountryId" />
-      <el-table-column label="省" align="center" prop="eduProvinceId" />
-      <el-table-column label="市" align="center" prop="eduCityId" />
-      <el-table-column label="区" align="center" prop="eduDistrictId" />
+      <el-table-column label="学校" align="center" prop="eduAcademyName" />
+      <el-table-column label="国家" align="center" prop="eduCountryName" />
+      <el-table-column label="省" align="center" prop="eduProvinceName" />
+      <el-table-column label="市" align="center" prop="eduCityName" />
+      <el-table-column label="区" align="center" prop="eduDistrictName" />
       <el-table-column label="详细地址" align="center" prop="eduDetailedAddress" />
       <el-table-column label="创建人" align="center" prop="eduCreateUser" />
       <el-table-column label="修改人" align="center" prop="eduModifyUser" />
@@ -102,6 +102,7 @@
         </div>
       </template>
     </el-dialog>
+
   </div>
 </template>
 
@@ -119,7 +120,6 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
-
 const data = reactive({
   form: {},
   queryParams: {

@@ -44,7 +44,7 @@ export function delType(eduId) {
 }
 export function listAllType() {
   return request({
-    url: '/service/type/all',
+    url: '/service/type/u/all',
     method: 'get'
   })
 }

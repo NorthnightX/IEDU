@@ -48,3 +48,9 @@ export function getAddressByAcademy(eduId){
     method: 'get',
   })
 }
+export function getAddressByAcademyAsList(eduId){
+  return request({
+    url: '/service/academyAddress/getByAcademyAsList/' + eduId,
+    method: 'get',
+  })
+}

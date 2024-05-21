@@ -44,20 +44,20 @@ export function delRecruit(eduId) {
 }
 export function getRecruitToExhibit(query) {
   return request({
-    url: '/service/recruit/exhibit',
+    url: '/service/recruit/u/exhibit',
     params: query,
     method: 'get'
   })
 }
 export function getRecruitDetails(eduId) {
   return request({
-    url: '/service/recruit/details/' + eduId,
+    url: '/service/recruit/u/details/' + eduId,
     method: 'get'
   })
 }
-export function getRecruitByKeyWord(params){
+export function getRecruitByCondition(params){
   return request({
-    url: '/service/recruit/u/getRecruitByKeyWord',
+    url: '/service/recruit/u/getRecruitByCondition',
     method: 'get',
     params: params
   })

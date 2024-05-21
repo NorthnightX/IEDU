@@ -51,11 +51,11 @@
     <el-table v-loading="loading" :data="addressList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="eduId" />
-      <el-table-column label="公司id" align="center" prop="eduCompanyId" />
-      <el-table-column label="国家" align="center" prop="eduCountryId" />
-      <el-table-column label="省" align="center" prop="eduProvinceId" />
-      <el-table-column label="市" align="center" prop="eduCityId" />
-      <el-table-column label="区" align="center" prop="eduDistrictId" />
+      <el-table-column label="公司" align="center" prop="companyName" />
+      <el-table-column label="国家" align="center" prop="eduCountryName" />
+      <el-table-column label="省" align="center" prop="eduProvinceName" />
+      <el-table-column label="市" align="center" prop="eduCityName" />
+      <el-table-column label="区" align="center" prop="eduDistrictName" />
       <el-table-column label="详细地址" align="center" prop="eduDetailedAddress" />
       <el-table-column label="创建人" align="center" prop="eduCreateUser" />
       <el-table-column label="修改人" align="center" prop="eduModifyUser" />
@@ -69,12 +69,12 @@
           <span>{{ parseTime(scope.row.eduModifyTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['service:address:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['service:address:remove']">删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--        <template #default="scope">-->
+<!--          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['service:address:edit']">修改</el-button>-->
+<!--          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['service:address:remove']">删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination

@@ -12,7 +12,7 @@ export function listNews(query) {
 // 查询新闻详细
 export function getNews(eduId) {
   return request({
-    url: '/service/news/' + eduId,
+    url: '/service/news/u/' + eduId,
     method: 'get'
   })
 }
