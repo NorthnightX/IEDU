@@ -54,6 +54,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             edu_title like #{text}
         </where>
     </select>
+    <select id="selectEduArticleListByUid" resultMap="EduArticleResult">
+        <include refid="selectEduArticleVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and edu_title = #{title}</if>
+             AND edu_create_user = #{uid}
+        </where>
+    </select>
 
     <insert id="insertEduArticle" parameterType="EduArticle" useGeneratedKeys="true" keyProperty="eduId">
         insert into edu_article

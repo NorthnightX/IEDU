@@ -58,8 +58,7 @@ public class EduArticleController extends BaseController
     /**
      * 获取动态详细信息
      */
-    @PreAuthorize("@ss.hasPermi('service:article:query')")
-    @GetMapping(value = "/{eduId}")
+    @GetMapping(value = "/u/{eduId}")
     public AjaxResult getInfo(@PathVariable("eduId") Long eduId)
     {
         return success(eduArticleService.selectEduArticleByEduId(eduId));

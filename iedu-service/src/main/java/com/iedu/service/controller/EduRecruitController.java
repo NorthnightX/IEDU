@@ -38,7 +38,7 @@ public class EduRecruitController extends BaseController
     public TableDataInfo list(EduRecruit eduRecruit)
     {
         startPage();
-        List<EduRecruit> list = eduRecruitService.selectEduRecruitList(eduRecruit);
+        List<RecruitVO> list = eduRecruitService.selectEduRecruitList(eduRecruit);
         return getDataTable(list);
     }
 
@@ -50,8 +50,8 @@ public class EduRecruitController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, EduRecruit eduRecruit)
     {
-        List<EduRecruit> list = eduRecruitService.selectEduRecruitList(eduRecruit);
-        ExcelUtil<EduRecruit> util = new ExcelUtil<EduRecruit>(EduRecruit.class);
+        List<RecruitVO> list = eduRecruitService.selectEduRecruitList(eduRecruit);
+        ExcelUtil<RecruitVO> util = new ExcelUtil<>(RecruitVO.class);
         util.exportExcel(response, list, "招聘信息数据");
     }
 
@@ -98,25 +98,27 @@ public class EduRecruitController extends BaseController
         return toAjax(eduRecruitService.deleteEduRecruitByEduIds(eduIds));
     }
 
-    @GetMapping("/exhibit")
+    @GetMapping("/u/exhibit")
     public AjaxResult getInfos()
     {
         return success(eduRecruitService.selectRecruitToShow());
     }
 
-    @GetMapping("/details/{id}")
+    @GetMapping("/u/details/{id}")
     public AjaxResult getDetails(@PathVariable int id)
     {
         return success(eduRecruitService.selectRecruitDetailById(id));
     }
 
-    @GetMapping("/u/getRecruitByKeyWord")
+    @GetMapping("/u/getRecruitByCondition")
     public AjaxResult getRecruitByKeyWord(@RequestParam("text") String text,
-                                          @RequestParam("pageSize") Integer pageSize, @RequestParam("pageNum") Integer pageNum){
+                                          @RequestParam("jobTypeId") Integer jobTypeId,
+                                          @RequestParam("pageSize") Integer pageSize,
+                                          @RequestParam("pageNum") Integer pageNum){
 
         text = "%" + text + "%";
-        List<RecruitVO> list = eduRecruitService.selectRecruitByKeyWord(text, pageSize, pageNum);
-        int total = eduRecruitService.selectCountByKeyWord(text);
+        List<RecruitVO> list = eduRecruitService.selectRecruitByCondition(text, pageSize, pageNum, jobTypeId);
+        int total = eduRecruitService.selectCountByCondition(text, jobTypeId);
         Page<RecruitVO> page = new Page<>();
         page.setPageNum(pageNum);
         page.setPageSize(pageSize);

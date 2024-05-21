@@ -18,13 +18,59 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="eduCreateTime"    column="edu_create_time"    />
         <result property="eduModifyTime"    column="edu_modify_time"    />
     </resultMap>
+    <resultMap type="CompanyVO" id="CompanyVO">
+        <result property="eduId" column="edu_id"/>
+        <result property="eduCompanyName" column="edu_company_name"/>
+        <result property="eduCompanyScaleId" column="edu_company_scale_id"/>
+        <result property="eduCompanyScaleName" column="edu_scale"/>
+        <result property="eduCompanyIndustryId" column="edu_company_industry_id"/>
+        <result property="eduCompanyIndustryName" column="edu_industry"/>
+        <result property="eduFinancingStageId" column="edu_financing_stage_id"/>
+        <result property="eduFinancingStageName" column="edu_stage"/>
+        <result property="eduCompanyIntroduce" column="edu_company_introduce"/>
+        <result property="eduInformationId" column="edu_information_id"/>
+        <result property="eduAddressId" column="edu_address_id"/>
+        <result property="eduCreateUser" column="edu_create_user"/>
+        <result property="eduModifyUser" column="edu_modify_user"/>
+        <result property="eduCreateTime" column="edu_create_time"/>
+        <result property="eduModifyTime" column="edu_modify_time"/>
+    </resultMap>
 
     <sql id="selectEduCompanyVo">
-        select edu_id, edu_company_name, edu_company_scale_id, edu_company_industry_id, edu_financing_stage_id, edu_company_introduce, edu_information_id, edu_address_id, edu_create_user, edu_modify_user, edu_create_time, edu_modify_time from edu_company
+        select edu_id, edu_company_name, edu_company_scale_id, edu_company_industry_id,
+               edu_financing_stage_id, edu_company_introduce, edu_information_id,
+               edu_address_id, edu_create_user, edu_modify_user, edu_create_time,
+               edu_modify_time from edu_company
+    </sql>
+    <sql id="VO">
+        SELECT
+            c.edu_id,
+            c.edu_company_name,
+            c.edu_company_scale_id,
+            s.edu_scale,
+            c.edu_company_industry_id,
+            i.edu_industry,
+            c.edu_financing_stage_id,
+            f.edu_stage,
+            c.edu_company_introduce,
+            c.edu_information_id,
+            c.edu_address_id,
+            c.edu_create_user,
+            c.edu_modify_user,
+            c.edu_create_time,
+            c.edu_modify_time
+        FROM
+            edu_company c
+                JOIN
+            edu_company_scale s ON c.edu_company_scale_id = s.edu_id
+                JOIN
+            edu_company_industry i ON c.edu_company_industry_id = i.edu_id
+                JOIN
+            edu_financing_stage f ON c.edu_financing_stage_id = f.edu_id
     </sql>
 
-    <select id="selectEduCompanyList" parameterType="EduCompany" resultMap="EduCompanyResult">
-        <include refid="selectEduCompanyVo"/>
+    <select id="selectEduCompanyList" parameterType="EduCompany" resultMap="CompanyVO">
+        <include refid="VO"/>
         <where>  
             <if test="eduCompanyName != null  and eduCompanyName != ''"> and edu_company_name like concat('%', #{eduCompanyName}, '%')</if>
             <if test="eduCompanyScaleId != null "> and edu_company_scale_id = #{eduCompanyScaleId}</if>
@@ -32,11 +78,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="eduFinancingStageId != null "> and edu_financing_stage_id = #{eduFinancingStageId}</if>
             <if test="eduCompanyIntroduce != null  and eduCompanyIntroduce != ''"> and edu_company_introduce = #{eduCompanyIntroduce}</if>
             <if test="eduInformationId != null "> and edu_information_id = #{eduInformationId}</if>
-            <if test="eduAddressId != null "> and edu_address_id = #{eduAddressId}</if>
-            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
-            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
-            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
-            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
         </where>
     </select>
     

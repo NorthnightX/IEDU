@@ -3,6 +3,8 @@ package com.iedu.service.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.iedu.common.core.domain.entity.SysRole;
+import com.iedu.common.core.domain.entity.SysUser;
 import com.iedu.common.utils.SecurityUtils;
 import com.iedu.service.domain.VO.RecruitVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +44,17 @@ public class EduRecruitServiceImpl implements IEduRecruitService
      * @return 招聘信息
      */
     @Override
-    public List<EduRecruit> selectEduRecruitList(EduRecruit eduRecruit)
+    public List<RecruitVO> selectEduRecruitList(EduRecruit eduRecruit)
     {
-        return eduRecruitMapper.selectEduRecruitList(eduRecruit);
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        List<SysRole> roles = user.getRoles();
+        for (SysRole r : roles) {
+            if (r.getRoleId() == 1L) {
+                return eduRecruitMapper.selectEduRecruitList(eduRecruit);
+            }
+        }
+        Long uid = SecurityUtils.getLoginUser().getUserId();
+        return eduRecruitMapper.selectEduRecruitListByUid(eduRecruit, uid);
     }
 
     /**
@@ -105,7 +115,7 @@ public class EduRecruitServiceImpl implements IEduRecruitService
 
     @Override
     public List<RecruitVO> selectRecruitToShow() {
-        return eduRecruitMapper.selectEduRecruitVOList();
+        return eduRecruitMapper.selectRecruitToShow();
     }
 
     @Override
@@ -114,13 +124,14 @@ public class EduRecruitServiceImpl implements IEduRecruitService
     }
 
     @Override
-    public List<RecruitVO> selectRecruitByKeyWord(String text, Integer pageSize, Integer pageNum) {
+    public List<RecruitVO> selectRecruitByCondition(String text, Integer pageSize, Integer pageNum, Integer jobTypeId) {
         int offset = (pageNum - 1) * pageSize;
-        return eduRecruitMapper.selectByKeyWord(text, pageSize, offset);
+        return eduRecruitMapper.selectRecruitByCondition(text, jobTypeId, pageSize, offset);
     }
 
     @Override
-    public int selectCountByKeyWord(String text) {
-        return eduRecruitMapper.selectCountByKeyWord(text);
+    public int selectCountByCondition(String text, Integer jobTypeId) {
+        return eduRecruitMapper.selectCountByCondition(text, jobTypeId);
     }
+
 }

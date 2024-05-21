@@ -2,6 +2,7 @@ package com.iedu.service.service;
 
 import java.util.List;
 import com.iedu.service.domain.EduCompany;
+import com.iedu.service.domain.VO.CompanyVO;
 
 /**
  * 公司Service接口
@@ -25,7 +26,7 @@ public interface IEduCompanyService
      * @param eduCompany 公司
      * @return 公司集合
      */
-    public List<EduCompany> selectEduCompanyList(EduCompany eduCompany);
+    public List<CompanyVO> selectEduCompanyList(EduCompany eduCompany);
 
     /**
      * 新增公司

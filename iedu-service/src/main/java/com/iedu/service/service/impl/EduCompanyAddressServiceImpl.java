@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.iedu.common.utils.SecurityUtils;
 import com.iedu.service.domain.EduCompany;
+import com.iedu.service.domain.VO.CompanyAddressVO;
 import com.iedu.service.mapper.EduCompanyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class EduCompanyAddressServiceImpl implements IEduCompanyAddressService
      * @return 公司地址
      */
     @Override
-    public List<EduCompanyAddress> selectEduCompanyAddressList(EduCompanyAddress eduCompanyAddress)
+    public List<CompanyAddressVO> selectEduCompanyAddressList(EduCompanyAddress eduCompanyAddress)
     {
         return eduCompanyAddressMapper.selectEduCompanyAddressList(eduCompanyAddress);
     }
@@ -111,10 +112,10 @@ public class EduCompanyAddressServiceImpl implements IEduCompanyAddressService
     }
 
     @Override
-    public EduCompanyAddress selectAddressByCompany(Long id) {
+    public CompanyAddressVO selectAddressByCompany(Long id) {
         EduCompanyAddress address = new EduCompanyAddress();
         address.setEduCompanyId(id);
-        List<EduCompanyAddress> list = eduCompanyAddressMapper.selectEduCompanyAddressList(address);
+        List<CompanyAddressVO> list = eduCompanyAddressMapper.selectEduCompanyAddressList(address);
         if(list.isEmpty()){
             return null;
         }

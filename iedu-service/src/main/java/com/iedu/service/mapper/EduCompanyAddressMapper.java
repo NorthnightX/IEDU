@@ -2,6 +2,7 @@ package com.iedu.service.mapper;
 
 import java.util.List;
 import com.iedu.service.domain.EduCompanyAddress;
+import com.iedu.service.domain.VO.CompanyAddressVO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -27,7 +28,7 @@ public interface EduCompanyAddressMapper
      * @param eduCompanyAddress 公司地址
      * @return 公司地址集合
      */
-    public List<EduCompanyAddress> selectEduCompanyAddressList(EduCompanyAddress eduCompanyAddress);
+    public List<CompanyAddressVO> selectEduCompanyAddressList(EduCompanyAddress eduCompanyAddress);
 
     /**
      * 新增公司地址

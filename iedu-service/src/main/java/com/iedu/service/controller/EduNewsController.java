@@ -57,8 +57,7 @@ public class EduNewsController extends BaseController
     /**
      * 获取新闻详细信息
      */
-    @PreAuthorize("@ss.hasPermi('service:news:query')")
-    @GetMapping(value = "/{eduId}")
+    @GetMapping(value = "/u/{eduId}")
     public AjaxResult getInfo(@PathVariable("eduId") Long eduId)
     {
         return success(eduNewsService.selectEduNewsByEduId(eduId));

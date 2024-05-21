@@ -3,6 +3,8 @@ package com.iedu.service.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.iedu.common.core.domain.entity.SysRole;
+import com.iedu.common.core.domain.entity.SysUser;
 import com.iedu.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +45,15 @@ public class EduArticleServiceImpl implements IEduArticleService
     @Override
     public List<EduArticle> selectEduArticleList(EduArticle eduArticle)
     {
-        return eduArticleMapper.selectEduArticleList(eduArticle);
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        List<SysRole> roles = user.getRoles();
+        for (SysRole r : roles) {
+            if (r.getRoleId() == 1L) {
+                return eduArticleMapper.selectEduArticleList(eduArticle);
+            }
+        }
+        Long uid = SecurityUtils.getLoginUser().getUserId();
+        return eduArticleMapper.selectEduArticleListByUid(eduArticle.getEduTitle(), uid);
     }
 
     /**

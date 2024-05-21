@@ -2,6 +2,7 @@ package com.iedu.service.service;
 
 import java.util.List;
 import com.iedu.service.domain.EduAcademyAddress;
+import com.iedu.service.domain.VO.AcademyAddressVO;
 
 /**
  * 学校地址Service接口
@@ -25,7 +26,7 @@ public interface IEduAcademyAddressService
      * @param eduAcademyAddress 学校地址
      * @return 学校地址集合
      */
-    public List<EduAcademyAddress> selectEduAcademyAddressList(EduAcademyAddress eduAcademyAddress);
+    public List<AcademyAddressVO> selectEduAcademyAddressList(EduAcademyAddress eduAcademyAddress);
 
     /**
      * 新增学校地址
@@ -59,5 +60,5 @@ public interface IEduAcademyAddressService
      */
     public int deleteEduAcademyAddressByEduId(Long eduId);
 
-    EduAcademyAddress selectAddressByAcademyId(Long id);
+    AcademyAddressVO selectAddressByAcademyId(Long id);
 }

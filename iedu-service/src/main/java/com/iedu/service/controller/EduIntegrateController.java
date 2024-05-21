@@ -123,4 +123,24 @@ public class EduIntegrateController extends BaseController
     public AjaxResult getIntegrateById(@PathVariable Long eduId){
         return success(eduIntegrateService.getIntegrateById(eduId));
     }
+
+    @GetMapping("/u/getIntegrateByCondition")
+    public AjaxResult getIntegrateByCondition(@RequestParam(value = "typeId") Integer tId,
+                                              @RequestParam("keyword") String keyword,
+    @RequestParam("pageSize") Integer pageSize, @RequestParam("pageNum") Integer pageNum){
+        keyword = "%" + keyword + "%";
+        List<IntegrateVO> list = eduIntegrateService.getIntegrateByCondition(tId, keyword, pageSize, pageNum);
+        int total = eduIntegrateService.getCountByCondition(tId, keyword);
+        Page<IntegrateVO> page = new Page<>();
+        page.setPageNum(pageNum);
+        page.setPageSize(pageSize);
+        page.setData(list);
+        page.setTotal(total);
+        return success(page);
+    }
+
+    @GetMapping("/u/getCurrentIntegrateList")
+    public AjaxResult getCurrentIntegrateList(){
+        return success(eduIntegrateService.getCurrentIntegrateList());
+    }
 }

@@ -2,6 +2,8 @@ package com.iedu.service.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.iedu.service.domain.VO.CompanyAddressVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +44,7 @@ public class EduCompanyAddressController extends BaseController
     public TableDataInfo list(EduCompanyAddress eduCompanyAddress)
     {
         startPage();
-        List<EduCompanyAddress> list = eduCompanyAddressService.selectEduCompanyAddressList(eduCompanyAddress);
+        List<CompanyAddressVO> list = eduCompanyAddressService.selectEduCompanyAddressList(eduCompanyAddress);
         return getDataTable(list);
     }
 
@@ -54,8 +56,8 @@ public class EduCompanyAddressController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, EduCompanyAddress eduCompanyAddress)
     {
-        List<EduCompanyAddress> list = eduCompanyAddressService.selectEduCompanyAddressList(eduCompanyAddress);
-        ExcelUtil<EduCompanyAddress> util = new ExcelUtil<EduCompanyAddress>(EduCompanyAddress.class);
+        List<CompanyAddressVO> list = eduCompanyAddressService.selectEduCompanyAddressList(eduCompanyAddress);
+        ExcelUtil<CompanyAddressVO> util = new ExcelUtil<>(CompanyAddressVO.class);
         util.exportExcel(response, list, "公司地址数据");
     }
 
@@ -106,5 +108,10 @@ public class EduCompanyAddressController extends BaseController
     @GetMapping("getAddressByCompany/{id}")
     public AjaxResult getAddressByCompany(@PathVariable Long id){
         return success(eduCompanyAddressService.selectAddressByCompany(id));
+    }
+    @GetMapping("getAddressVOAsListByCompany/{id}")
+    public AjaxResult getAddressVOAsListByCompany(@PathVariable Long id){
+        CompanyAddressVO vo = eduCompanyAddressService.selectAddressByCompany(id);
+        return success(new CompanyAddressVO[]{vo});
     }
 }

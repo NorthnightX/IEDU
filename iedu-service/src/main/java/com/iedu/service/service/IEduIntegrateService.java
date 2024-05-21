@@ -67,4 +67,12 @@ public interface IEduIntegrateService
     int selectCountByKeyWord(String text);
 
     IntegrateVO getIntegrateById(Long eduId);
+
+
+
+    int getCountByCondition(Integer tId, String keyword);
+
+    List<IntegrateVO> getIntegrateByCondition(Integer tId, String keyword, Integer pageSize, Integer pageNum);
+
+    List<IntegrateVO> getCurrentIntegrateList();
 }

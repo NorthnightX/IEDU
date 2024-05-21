@@ -93,6 +93,7 @@ public class EduCompanyUserServiceImpl implements IEduCompanyUserService
 
     @Override
     public Long selectByUserId(Long id) {
-        return eduCompanyUserMapper.selectCompanyByUserId(id);
+        Long cId = eduCompanyUserMapper.selectCompanyByUserId(id);
+        return cId == null ? -1L : cId;
     }
 }

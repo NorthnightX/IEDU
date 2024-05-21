@@ -3,6 +3,8 @@ package com.iedu.service.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.iedu.common.core.domain.entity.SysRole;
+import com.iedu.common.core.domain.entity.SysUser;
 import com.iedu.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +45,16 @@ public class EduNewsServiceImpl implements IEduNewsService
     @Override
     public List<EduNews> selectEduNewsList(EduNews eduNews)
     {
-        return eduNewsMapper.selectEduNewsList(eduNews);
+        // 检查用户角色，如果是管理员，则允许查找所有的，否则只允许查找自己的
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        List<SysRole> roles = user.getRoles();
+        for (SysRole r : roles) {
+            if (r.getRoleId() == 1L) {
+                return eduNewsMapper.selectEduNewsList(eduNews);
+            }
+        }
+        Long uid = SecurityUtils.getLoginUser().getUserId();
+        return eduNewsMapper.selectEduNewsListByUserId(eduNews.getEduTitle(), uid);
     }
 
     /**

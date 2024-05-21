@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectEduAcademyVo"/>
         <where>  
             <if test="eduAcademyName != null  and eduAcademyName != ''"> and edu_academy_name like concat('%', #{eduAcademyName}, '%')</if>
-            <if test="eduAcademyTag != null  and eduAcademyTag != ''"> and edu_academy_tag = #{eduAcademyTag}</if>
+            <if test="eduAcademyTag != null  and eduAcademyTag != ''"> and edu_academy_tag like concat('%', #{eduAcademyTag}, '%')</if>
             <if test="eduAcademyIntroduce != null  and eduAcademyIntroduce != ''"> and edu_academy_introduce = #{eduAcademyIntroduce}</if>
             <if test="eduAddressId != null "> and edu_address_id = #{eduAddressId}</if>
             <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>

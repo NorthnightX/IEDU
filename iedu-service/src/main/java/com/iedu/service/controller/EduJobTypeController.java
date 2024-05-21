@@ -100,7 +100,7 @@ public class EduJobTypeController extends BaseController
         return toAjax(eduJobTypeService.deleteEduJobTypeByEduIds(eduIds));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/u/all")
     public AjaxResult getAllType()
     {
         return success(eduJobTypeService.selectAll());

@@ -29,7 +29,7 @@ public interface EduRecruitMapper
      * @param eduRecruit 招聘信息
      * @return 招聘信息集合
      */
-    public List<EduRecruit> selectEduRecruitList(EduRecruit eduRecruit);
+    public List<RecruitVO> selectEduRecruitList(EduRecruit eduRecruit);
 
     /**
      * 新增招聘信息
@@ -66,8 +66,12 @@ public interface EduRecruitMapper
     List<RecruitVO> selectEduRecruitVOList();
 
     RecruitVO selectEduRecruitDetailById(int id);
+    List<RecruitVO> selectRecruitByCondition(@Param("text") String text, @Param("tId") Integer tId,
+                                             @Param("pageSize") Integer pageSize, @Param("offset") Integer offset);
 
-    List<com.iedu.service.domain.VO.RecruitVO> selectByKeyWord(@Param("text") String text, @Param("pageSize") int pageNum, @Param("offset") int offset);
+    int selectCountByCondition(@Param("text") String text, @Param("tId") Integer tId);
 
-    int selectCountByKeyWord(String text);
+    List<RecruitVO> selectRecruitToShow();
+
+    List<RecruitVO> selectEduRecruitListByUid(@Param("recruit") EduRecruit eduRecruit, @Param("uid") Long uid);
 }

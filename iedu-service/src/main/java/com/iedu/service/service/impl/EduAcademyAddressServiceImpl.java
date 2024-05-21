@@ -7,6 +7,7 @@ import com.iedu.common.utils.SecurityUtils;
 import com.iedu.service.domain.EduAcademy;
 import com.iedu.service.domain.EduCompany;
 import com.iedu.service.domain.EduCompanyAddress;
+import com.iedu.service.domain.VO.AcademyAddressVO;
 import com.iedu.service.mapper.EduAcademyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class EduAcademyAddressServiceImpl implements IEduAcademyAddressService
      * @return 学校地址
      */
     @Override
-    public List<EduAcademyAddress> selectEduAcademyAddressList(EduAcademyAddress eduAcademyAddress)
+    public List<AcademyAddressVO> selectEduAcademyAddressList(EduAcademyAddress eduAcademyAddress)
     {
         return eduAcademyAddressMapper.selectEduAcademyAddressList(eduAcademyAddress);
     }
@@ -113,10 +114,10 @@ public class EduAcademyAddressServiceImpl implements IEduAcademyAddressService
     }
 
     @Override
-    public EduAcademyAddress selectAddressByAcademyId(Long id) {
+    public AcademyAddressVO selectAddressByAcademyId(Long id) {
         EduAcademyAddress address = new EduAcademyAddress();
         address.setEduAcademyId(id);
-        List<EduAcademyAddress> list = eduAcademyAddressMapper.selectEduAcademyAddressList(address);
+        List<AcademyAddressVO> list = eduAcademyAddressMapper.selectEduAcademyAddressList(address);
         if(list.isEmpty()){
             return null;
         }

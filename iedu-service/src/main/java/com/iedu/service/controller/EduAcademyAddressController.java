@@ -2,6 +2,8 @@ package com.iedu.service.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.iedu.service.domain.VO.AcademyAddressVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +44,7 @@ public class EduAcademyAddressController extends BaseController
     public TableDataInfo list(EduAcademyAddress eduAcademyAddress)
     {
         startPage();
-        List<EduAcademyAddress> list = eduAcademyAddressService.selectEduAcademyAddressList(eduAcademyAddress);
+        List<AcademyAddressVO> list = eduAcademyAddressService.selectEduAcademyAddressList(eduAcademyAddress);
         return getDataTable(list);
     }
 
@@ -54,8 +56,8 @@ public class EduAcademyAddressController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, EduAcademyAddress eduAcademyAddress)
     {
-        List<EduAcademyAddress> list = eduAcademyAddressService.selectEduAcademyAddressList(eduAcademyAddress);
-        ExcelUtil<EduAcademyAddress> util = new ExcelUtil<EduAcademyAddress>(EduAcademyAddress.class);
+        List<AcademyAddressVO> list = eduAcademyAddressService.selectEduAcademyAddressList(eduAcademyAddress);
+        ExcelUtil<AcademyAddressVO> util = new ExcelUtil<>(AcademyAddressVO.class);
         util.exportExcel(response, list, "学校地址数据");
     }
 
@@ -103,8 +105,14 @@ public class EduAcademyAddressController extends BaseController
     }
 
     @GetMapping("/getByAcademy/{id}")
-    public AjaxResult remove(@PathVariable Long id)
+    public AjaxResult getByAcademy(@PathVariable Long id)
     {
         return success(eduAcademyAddressService.selectAddressByAcademyId(id));
+    }
+
+    @GetMapping("/getByAcademyAsList/{id}")
+    public AjaxResult getByAcademyAsList(@PathVariable Long id)
+    {
+        return success(new AcademyAddressVO[]{eduAcademyAddressService.selectAddressByAcademyId(id)});
     }
 }

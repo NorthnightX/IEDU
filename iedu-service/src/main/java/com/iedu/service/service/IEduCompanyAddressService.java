@@ -2,6 +2,7 @@ package com.iedu.service.service;
 
 import java.util.List;
 import com.iedu.service.domain.EduCompanyAddress;
+import com.iedu.service.domain.VO.CompanyAddressVO;
 
 /**
  * 公司地址Service接口
@@ -25,7 +26,7 @@ public interface IEduCompanyAddressService
      * @param eduCompanyAddress 公司地址
      * @return 公司地址集合
      */
-    public List<EduCompanyAddress> selectEduCompanyAddressList(EduCompanyAddress eduCompanyAddress);
+    public List<CompanyAddressVO> selectEduCompanyAddressList(EduCompanyAddress eduCompanyAddress);
 
     /**
      * 新增公司地址
@@ -59,5 +60,5 @@ public interface IEduCompanyAddressService
      */
     public int deleteEduCompanyAddressByEduId(Long eduId);
 
-    EduCompanyAddress selectAddressByCompany(Long id);
+    CompanyAddressVO selectAddressByCompany(Long id);
 }

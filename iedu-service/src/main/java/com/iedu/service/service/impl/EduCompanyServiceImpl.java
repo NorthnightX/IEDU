@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.iedu.common.utils.SecurityUtils;
+import com.iedu.service.domain.VO.CompanyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.iedu.service.mapper.EduCompanyMapper;
@@ -41,7 +42,7 @@ public class EduCompanyServiceImpl implements IEduCompanyService
      * @return 公司
      */
     @Override
-    public List<EduCompany> selectEduCompanyList(EduCompany eduCompany)
+    public List<CompanyVO> selectEduCompanyList(EduCompany eduCompany)
     {
         return eduCompanyMapper.selectEduCompanyList(eduCompany);
     }

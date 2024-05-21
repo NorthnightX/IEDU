@@ -98,6 +98,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="EduIntegrateVO"/>
         AND i.edu_id = #{eduId}
     </select>
+    <select id="selectByCondition" resultMap="EduIntegrateVO">
+        <include refid="EduIntegrateVO"/>
+        AND
+        i.edu_project_name like #{keyword}
+        <if test="tId != 0">
+            AND i.edu_project_type = #{tId}
+        </if>
+        limit #{pageSize} offset #{offset}
+    </select>
+    <select id="selectCountByCondition" resultType="java.lang.Integer">
+        select count(1) from edu_integrate
+        <where>
+            edu_project_name like #{keyword}
+            <if test="tId != 0">
+                AND edu_project_type = #{tId}
+            </if>
+        </where>
+    </select>
+    <select id="selectCurrent" resultMap="EduIntegrateVO">
+        <include refid="EduIntegrateVO"/>
+        order by i.edu_start_time desc
+        limit 10
+    </select>
 
     <insert id="insertEduIntegrate" parameterType="EduIntegrate" useGeneratedKeys="true" keyProperty="eduId">
         insert into edu_integrate

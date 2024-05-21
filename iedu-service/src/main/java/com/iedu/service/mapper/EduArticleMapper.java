@@ -65,4 +65,6 @@ public interface EduArticleMapper
     List<EduArticle> selectByKeyWord(@Param("text") String text, @Param("pageSize") int pageNum, @Param("offset") int offset);
 
     int selectCountByKeyWord(String text);
+
+    List<EduArticle> selectEduArticleListByUid(@Param("title") String eduTitle, @Param("uid") Long uid);
 }

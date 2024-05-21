@@ -21,23 +21,62 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectEduAcademyAddressVo">
         select edu_id, edu_academy_id, edu_country_id, edu_province_id, edu_city_id, edu_district_id, edu_detailed_address, edu_create_user, edu_modify_user, edu_create_time, edu_modify_time from edu_academy_address
     </sql>
-
-    <select id="selectEduAcademyAddressList" parameterType="EduAcademyAddress" resultMap="EduAcademyAddressResult">
-        <include refid="selectEduAcademyAddressVo"/>
+    <sql id="AddressVo">
+        SELECT
+            a.edu_id,
+            a.edu_academy_id,
+            ac.edu_academy_name,
+            a.edu_country_id,
+            country.cityName AS countryName,
+            a.edu_province_id,
+            province.cityName AS provinceName,
+            a.edu_city_id,
+            city.cityName AS cityName,
+            a.edu_district_id,
+            district.cityName AS districtName,
+            a.edu_detailed_address,
+            a.edu_create_user,
+            a.edu_modify_user,
+            a.edu_create_time,
+            a.edu_modify_time
+        FROM
+            edu_academy_address a
+                JOIN edu_academy ac ON ac.edu_id = a.edu_academy_id
+                JOIN s_provinces country ON a.edu_country_id = country.id
+                JOIN s_provinces province ON a.edu_province_id = province.id
+                JOIN s_provinces city ON a.edu_city_id = city.id
+                JOIN s_provinces district ON a.edu_district_id = district.id
+    </sql>
+    <select id="selectEduAcademyAddressList" parameterType="EduAcademyAddress" resultMap="AcademyAddressVO">
+        <include refid="AddressVo"/>
         <where>  
-            <if test="eduAcademyId != null "> and edu_academy_id = #{eduAcademyId}</if>
-            <if test="eduCountryId != null  and eduCountryId != ''"> and edu_country_id = #{eduCountryId}</if>
-            <if test="eduProvinceId != null  and eduProvinceId != ''"> and edu_province_id = #{eduProvinceId}</if>
-            <if test="eduCityId != null  and eduCityId != ''"> and edu_city_id = #{eduCityId}</if>
-            <if test="eduDistrictId != null  and eduDistrictId != ''"> and edu_district_id = #{eduDistrictId}</if>
-            <if test="eduDetailedAddress != null  and eduDetailedAddress != ''"> and edu_detailed_address = #{eduDetailedAddress}</if>
-            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
-            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
-            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
-            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
+            <if test="eduAcademyId != null "> and a.edu_academy_id = #{eduAcademyId}</if>
+            <if test="eduCountryId != null  and eduCountryId != ''"> and a.edu_country_id = #{eduCountryId}</if>
+            <if test="eduProvinceId != null  and eduProvinceId != ''"> and a.edu_province_id = #{eduProvinceId}</if>
+            <if test="eduCityId != null  and eduCityId != ''"> and a,edu_city_id = #{eduCityId}</if>
+            <if test="eduDistrictId != null  and eduDistrictId != ''"> and a.edu_district_id = #{eduDistrictId}</if>
+            <if test="eduDetailedAddress != null  and eduDetailedAddress != ''"> and a.edu_detailed_address = #{eduDetailedAddress}</if>
         </where>
     </select>
-    
+    <resultMap type="AcademyAddressVO" id="AcademyAddressVO">
+        <result property="eduId" column="edu_id"/>
+        <result property="eduAcademyId" column="edu_academy_id"/>
+        <result property="eduAcademyName" column="edu_academy_name"/>
+        <result property="eduCountryId" column="edu_country_id"/>
+        <result property="eduCountryName" column="countryName"/>
+        <result property="eduProvinceId" column="edu_province_id"/>
+        <result property="eduProvinceName" column="provinceName"/>
+        <result property="eduCityId" column="edu_city_id"/>
+        <result property="eduCityName" column="cityName"/>
+        <result property="eduDistrictId" column="edu_district_id"/>
+        <result property="eduDistrictName" column="districtName"/>
+        <result property="eduDetailedAddress" column="edu_detailed_address"/>
+        <result property="eduCreateUser" column="edu_create_user"/>
+        <result property="eduModifyUser" column="edu_modify_user"/>
+        <result property="eduCreateTime" column="edu_create_time"/>
+        <result property="eduModifyTime" column="edu_modify_time"/>
+    </resultMap>
+
     <select id="selectEduAcademyAddressByEduId" parameterType="Long" resultMap="EduAcademyAddressResult">
         <include refid="selectEduAcademyAddressVo"/>
         where edu_id = #{eduId}

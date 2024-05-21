@@ -2,6 +2,8 @@ package com.iedu.service.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.iedu.service.domain.VO.CompanyVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +44,7 @@ public class EduCompanyController extends BaseController
     public TableDataInfo list(EduCompany eduCompany)
     {
         startPage();
-        List<EduCompany> list = eduCompanyService.selectEduCompanyList(eduCompany);
+        List<CompanyVO> list = eduCompanyService.selectEduCompanyList(eduCompany);
         return getDataTable(list);
     }
 
@@ -54,8 +56,8 @@ public class EduCompanyController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, EduCompany eduCompany)
     {
-        List<EduCompany> list = eduCompanyService.selectEduCompanyList(eduCompany);
-        ExcelUtil<EduCompany> util = new ExcelUtil<EduCompany>(EduCompany.class);
+        List<CompanyVO> list = eduCompanyService.selectEduCompanyList(eduCompany);
+        ExcelUtil<CompanyVO> util = new ExcelUtil<>(CompanyVO.class);
         util.exportExcel(response, list, "公司数据");
     }
 

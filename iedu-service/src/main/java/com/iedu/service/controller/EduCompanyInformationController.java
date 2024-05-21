@@ -108,5 +108,10 @@ public class EduCompanyInformationController extends BaseController
     {
         return success(eduCompanyInformationService.selectEduCompanyInformationByCompanyId(id));
     }
-
+    @GetMapping(value = "/getInfoAsList/{id}")
+    public AjaxResult  getInformationAsListByCompany(@PathVariable("id") Long id)
+    {
+        EduCompanyInformation inf = eduCompanyInformationService.selectEduCompanyInformationByCompanyId(id);
+        return success(new EduCompanyInformation[]{inf});
+    }
 }

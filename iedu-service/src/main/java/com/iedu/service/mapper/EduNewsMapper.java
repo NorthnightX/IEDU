@@ -67,4 +67,6 @@ public interface EduNewsMapper
     List<EduNews> selectByKeyWord(@Param("text") String text, @Param("pageSize") int pageNum, @Param("offset") int offset);
 
     int selectCountByKeyWord(String text);
+
+    List<EduNews> selectEduNewsListByUserId(@Param("title") String title, @Param("uid") Long uid);
 }

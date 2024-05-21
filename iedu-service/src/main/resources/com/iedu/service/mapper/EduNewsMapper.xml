@@ -27,10 +27,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="eduPublisher != null  and eduPublisher != ''"> and edu_publisher = #{eduPublisher}</if>
             <if test="eduPublishTime != null "> and edu_publish_time = #{eduPublishTime}</if>
             <if test="eduContent != null  and eduContent != ''"> and edu_content = #{eduContent}</if>
-            <if test="eduCreateUser != null "> and edu_create_user = #{eduCreateUser}</if>
-            <if test="eduModifyUser != null "> and edu_modify_user = #{eduModifyUser}</if>
-            <if test="eduCreateTime != null "> and edu_create_time = #{eduCreateTime}</if>
-            <if test="eduModifyTime != null "> and edu_modify_time = #{eduModifyTime}</if>
         </where>
     </select>
     
@@ -55,6 +51,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select count(1) from edu_news
         <where>
             edu_title like concat('%', #{text}, '%')
+        </where>
+    </select>
+    <select id="selectEduNewsListByUserId" resultMap="EduNewsResult">
+        <include refid="selectEduNewsVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and edu_title like concat('%', #{title}, '%')</if>
+             AND edu_create_user = #{uid}
         </where>
     </select>
 

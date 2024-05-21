@@ -68,4 +68,10 @@ public interface EduIntegrateMapper
     int selectCountByKeyWord(String text);
 
     IntegrateVO selectIntegrateById(Long eduId);
+
+    List<IntegrateVO> selectByCondition(@Param("tId")Integer tId, @Param("keyword")String keyword, @Param("pageSize")Integer pageSize, @Param("offset")int offset);
+
+    int selectCountByCondition(@Param("tId")Integer tId, @Param("keyword")String keyword);
+
+    List<IntegrateVO> selectCurrent();
 }

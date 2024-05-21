@@ -26,7 +26,7 @@ public interface IEduRecruitService
      * @param eduRecruit 招聘信息
      * @return 招聘信息集合
      */
-    public List<EduRecruit> selectEduRecruitList(EduRecruit eduRecruit);
+    public List<RecruitVO> selectEduRecruitList(EduRecruit eduRecruit);
 
     /**
      * 新增招聘信息
@@ -64,7 +64,7 @@ public interface IEduRecruitService
 
     RecruitVO selectRecruitDetailById(int id);
 
-    List<RecruitVO> selectRecruitByKeyWord(String text, Integer pageSize, Integer pageNum);
+    List<RecruitVO> selectRecruitByCondition(String text, Integer pageSize, Integer pageNum, Integer jobTypeId);
 
-    int selectCountByKeyWord(String text);
+    int selectCountByCondition(String text, Integer jobTypeId);
 }

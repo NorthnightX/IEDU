@@ -123,4 +123,21 @@ public class EduIntegrateServiceImpl implements IEduIntegrateService
     public IntegrateVO getIntegrateById(Long eduId) {
         return eduIntegrateMapper.selectIntegrateById(eduId);
     }
+
+    @Override
+    public int getCountByCondition(Integer tId, String keyword) {
+        return eduIntegrateMapper.selectCountByCondition(tId, keyword);
+    }
+
+    @Override
+    public List<IntegrateVO> getIntegrateByCondition(Integer tId, String keyword, Integer pageSize, Integer pageNum) {
+        int offset = (pageNum - 1) * pageSize;
+        return eduIntegrateMapper.selectByCondition(tId, keyword, pageSize, offset);
+    }
+
+    @Override
+    public List<IntegrateVO> getCurrentIntegrateList() {
+        return eduIntegrateMapper.selectCurrent();
+    }
+
 }
