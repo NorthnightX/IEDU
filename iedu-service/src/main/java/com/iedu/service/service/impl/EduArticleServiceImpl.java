@@ -128,4 +128,9 @@ public class EduArticleServiceImpl implements IEduArticleService
     public int selectCountByKeyWord(String text) {
         return eduArticleMapper.selectCountByKeyWord(text);
     }
+
+    @Override
+    public Integer selectCount() {
+        return eduArticleMapper.selectCount();
+    }
 }

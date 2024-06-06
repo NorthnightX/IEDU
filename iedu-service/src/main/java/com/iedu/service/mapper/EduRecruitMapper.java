@@ -74,4 +74,6 @@ public interface EduRecruitMapper
     List<RecruitVO> selectRecruitToShow();
 
     List<RecruitVO> selectEduRecruitListByUid(@Param("recruit") EduRecruit eduRecruit, @Param("uid") Long uid);
+
+    List<EduRecruit> selectAll();
 }

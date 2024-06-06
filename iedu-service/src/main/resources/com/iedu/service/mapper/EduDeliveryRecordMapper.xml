@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduDeliveryRecordMapper">
+    
+    <resultMap type="EduDeliveryRecord" id="EduDeliveryRecordResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduRecruitId"    column="edu_recruit_id"    />
+        <result property="eduUserId"    column="edu_user_id"    />
+        <result property="eduResumeLink"    column="edu_resume_link"    />
+        <result property="eduDelivererName"    column="edu_deliverer_name"    />
+        <result property="eduDelivererAge"    column="edu_deliverer_age"    />
+        <result property="eduDelivererSex"    column="edu_deliverer_sex"    />
+        <result property="eduDelivererIdCard"    column="edu_deliverer_id_card"    />
+        <result property="eduDelivererMail"    column="edu_deliverer_mail"    />
+        <result property="eduDelivererPhone"    column="edu_deliverer_phone"    />
+        <result property="eduDeliveryTime"    column="edu_delivery_time"    />
+    </resultMap>
+    <resultMap type="ResumeVO" id="ResumeVO">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduRecruitId"    column="edu_recruit_id"    />
+        <result property="eduRecruitName"    column="edu_job_name"    />
+        <result property="eduCompanyName"    column="edu_company_name"    />
+        <result property="eduCompanyId"    column="edu_company_id"    />
+        <result property="eduUserId"    column="edu_user_id"    />
+        <result property="eduResumeLink"    column="edu_resume_link"    />
+        <result property="eduDelivererName"    column="edu_deliverer_name"    />
+        <result property="eduDelivererAge"    column="edu_deliverer_age"    />
+        <result property="eduDelivererSex"    column="edu_deliverer_sex"    />
+        <result property="eduDelivererIdCard"    column="edu_deliverer_id_card"    />
+        <result property="eduDelivererMail"    column="edu_deliverer_mail"    />
+        <result property="eduDelivererPhone"    column="edu_deliverer_phone"    />
+        <result property="eduDeliveryTime"    column="edu_delivery_time"    />
+    </resultMap>
+
+    <sql id="selectEduDeliveryRecordVo">
+        select edu_id, edu_recruit_id, edu_user_id, edu_resume_link, edu_deliverer_name, edu_deliverer_age, edu_deliverer_sex, edu_deliverer_id_card, edu_deliverer_mail, edu_deliverer_phone, edu_delivery_time from edu_delivery_record
+    </sql>
+    <sql id="VO">
+        SELECT
+            resume.edu_id,
+            resume.edu_recruit_id,
+            recruit.edu_job_name,
+            recruit.edu_company_id,
+            company.edu_company_name,
+            resume.edu_user_id,
+            resume.edu_resume_link,
+            resume.edu_deliverer_name,
+            resume.edu_deliverer_age,
+            resume.edu_deliverer_sex,
+            resume.edu_deliverer_id_card,
+            resume.edu_deliverer_mail,
+            resume.edu_deliverer_phone,
+            resume.edu_delivery_time
+        FROM
+            edu_delivery_record resume
+                JOIN
+            edu_recruit recruit
+            ON
+                resume.edu_recruit_id = recruit.edu_id
+                JOIN
+            edu_company company
+            ON
+                recruit.edu_company_id = company.edu_id
+    </sql>
+    <select id="selectEduDeliveryRecordList" parameterType="EduDeliveryRecord" resultMap="ResumeVO">
+        <include refid="VO"/>
+        <where>  
+            <if test="eduRecruitId != null "> and resume.edu_recruit_id = #{eduRecruitId}</if>
+            <if test="eduUserId != null "> and resume.edu_user_id = #{eduUserId}</if>
+            <if test="eduResumeLink != null  and eduResumeLink != ''"> and resume.edu_resume_link = #{eduResumeLink}</if>
+            <if test="eduDelivererName != null  and eduDelivererName != ''"> and resume.edu_deliverer_name like concat('%', #{eduDelivererName}, '%')</if>
+            <if test="eduDeliveryTime != null "> and resume.edu_delivery_time = #{eduDeliveryTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduDeliveryRecordByEduId" parameterType="Long" resultMap="EduDeliveryRecordResult">
+        <include refid="selectEduDeliveryRecordVo"/>
+        where edu_id = #{eduId}
+    </select>
+    <select id="selectRecordListByUser" resultMap="ResumeVO">
+        <include refid="VO"></include>
+        <where>
+            resume.edu_user_id = #{id}
+        </where>
+        limit #{pageSize} offset #{offset}
+    </select>
+    <select id="selectRecordCountByUser" resultType="java.lang.Integer">
+        select count(1) from edu_delivery_record <where> edu_user_id = #{id} </where>
+    </select>
+    <select id="selectEduDeliveryRecordListByUser" resultMap="ResumeVO">
+        <include refid="VO"/>
+        <where>
+            <if test="record.eduRecruitId != null "> and resume.edu_recruit_id = #{record.eduRecruitId}</if>
+            <if test="record.eduUserId != null "> and resume.edu_user_id = #{record.eduUserId}</if>
+            <if test="record.eduResumeLink != null  and record.eduResumeLink != ''"> and resume.edu_resume_link = #{record.eduResumeLink}</if>
+            <if test="record.eduDelivererName != null  and record.eduDelivererName != ''"> and resume.edu_deliverer_name like concat('%', #{record.eduDelivererName}, '%')</if>
+            <if test="record.eduDeliveryTime != null "> and resume.edu_delivery_time = #{record.eduDeliveryTime}</if>
+             AND recruit.edu_create_user = #{uid}
+        </where>
+    </select>
+    <select id="selectTodayCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM edu_delivery_record WHERE DATE(edu_delivery_time) = CURDATE();
+    </select>
+
+    <select id="selectAgeProportion" resultType="com.iedu.service.domain.Chart">
+        SELECT
+            CASE
+                WHEN edu_deliverer_age &lt; 20 THEN '20岁以下'
+                WHEN edu_deliverer_age BETWEEN 20 AND 23 THEN '20-23岁'
+                WHEN edu_deliverer_age BETWEEN 24 AND 26 THEN '24-26岁'
+                WHEN edu_deliverer_age BETWEEN 27 AND 30 THEN '27-30岁'
+                WHEN edu_deliverer_age BETWEEN 31 AND 40 THEN '31-40岁'
+                ELSE '40岁以上'
+                END AS span,
+            COUNT(1) AS v
+        FROM edu_delivery_record
+        GROUP BY span
+    </select>
+    <select id="selectAll"  resultMap="EduDeliveryRecordResult">
+        select edu_id, edu_recruit_id from edu_delivery_record
+    </select>
+
+    <insert id="insertEduDeliveryRecord" parameterType="EduDeliveryRecord" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_delivery_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduRecruitId != null">edu_recruit_id,</if>
+            <if test="eduUserId != null">edu_user_id,</if>
+            <if test="eduResumeLink != null">edu_resume_link,</if>
+            <if test="eduDelivererName != null">edu_deliverer_name,</if>
+            <if test="eduDelivererAge != null">edu_deliverer_age,</if>
+            <if test="eduDelivererSex != null">edu_deliverer_sex,</if>
+            <if test="eduDelivererIdCard != null">edu_deliverer_id_card,</if>
+            <if test="eduDelivererMail != null">edu_deliverer_mail,</if>
+            <if test="eduDelivererPhone != null">edu_deliverer_phone,</if>
+            <if test="eduDeliveryTime != null">edu_delivery_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduRecruitId != null">#{eduRecruitId},</if>
+            <if test="eduUserId != null">#{eduUserId},</if>
+            <if test="eduResumeLink != null">#{eduResumeLink},</if>
+            <if test="eduDelivererName != null">#{eduDelivererName},</if>
+            <if test="eduDelivererAge != null">#{eduDelivererAge},</if>
+            <if test="eduDelivererSex != null">#{eduDelivererSex},</if>
+            <if test="eduDelivererIdCard != null">#{eduDelivererIdCard},</if>
+            <if test="eduDelivererMail != null">#{eduDelivererMail},</if>
+            <if test="eduDelivererPhone != null">#{eduDelivererPhone},</if>
+            <if test="eduDeliveryTime != null">#{eduDeliveryTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduDeliveryRecord" parameterType="EduDeliveryRecord">
+        update edu_delivery_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduRecruitId != null">edu_recruit_id = #{eduRecruitId},</if>
+            <if test="eduUserId != null">edu_user_id = #{eduUserId},</if>
+            <if test="eduResumeLink != null">edu_resume_link = #{eduResumeLink},</if>
+            <if test="eduDelivererName != null">edu_deliverer_name = #{eduDelivererName},</if>
+            <if test="eduDelivererAge != null">edu_deliverer_age = #{eduDelivererAge},</if>
+            <if test="eduDelivererSex != null">edu_deliverer_sex = #{eduDelivererSex},</if>
+            <if test="eduDelivererIdCard != null">edu_deliverer_id_card = #{eduDelivererIdCard},</if>
+            <if test="eduDelivererMail != null">edu_deliverer_mail = #{eduDelivererMail},</if>
+            <if test="eduDelivererPhone != null">edu_deliverer_phone = #{eduDelivererPhone},</if>
+            <if test="eduDeliveryTime != null">edu_delivery_time = #{eduDeliveryTime},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduDeliveryRecordByEduId" parameterType="Long">
+        delete from edu_delivery_record where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduDeliveryRecordByEduIds" parameterType="String">
+        delete from edu_delivery_record where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

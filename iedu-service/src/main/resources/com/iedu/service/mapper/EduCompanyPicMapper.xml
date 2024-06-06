@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduCompanyPicMapper">
+    
+    <resultMap type="EduCompanyPic" id="EduCompanyPicResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduCompanyId"    column="edu_company_id"    />
+        <result property="eduLogo"    column="edu_logo"    />
+        <result property="eduImages"    column="edu_images"    />
+    </resultMap>
+
+    <sql id="selectEduCompanyPicVo">
+        select edu_id, edu_company_id, edu_logo, edu_images from edu_company_pic
+    </sql>
+
+    <select id="selectEduCompanyPicList" parameterType="EduCompanyPic" resultMap="EduCompanyPicResult">
+        <include refid="selectEduCompanyPicVo"/>
+        <where>  
+            <if test="eduCompanyId != null "> and edu_company_id = #{eduCompanyId}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduCompanyPicByEduId" parameterType="Long" resultMap="EduCompanyPicResult">
+        <include refid="selectEduCompanyPicVo"/>
+        where edu_id = #{eduId}
+    </select>
+        
+    <insert id="insertEduCompanyPic" parameterType="EduCompanyPic" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_company_pic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduCompanyId != null">edu_company_id,</if>
+            <if test="eduLogo != null">edu_logo,</if>
+            <if test="eduImages != null">edu_images,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduCompanyId != null">#{eduCompanyId},</if>
+            <if test="eduLogo != null">#{eduLogo},</if>
+            <if test="eduImages != null">#{eduImages},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduCompanyPic" parameterType="EduCompanyPic">
+        update edu_company_pic
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduCompanyId != null">edu_company_id = #{eduCompanyId},</if>
+            <if test="eduLogo != null">edu_logo = #{eduLogo},</if>
+            <if test="eduImages != null">edu_images = #{eduImages},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduCompanyPicByEduId" parameterType="Long">
+        delete from edu_company_pic where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduCompanyPicByEduIds" parameterType="String">
+        delete from edu_company_pic where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

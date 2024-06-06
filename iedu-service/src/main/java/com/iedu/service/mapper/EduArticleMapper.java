@@ -67,4 +67,6 @@ public interface EduArticleMapper
     int selectCountByKeyWord(String text);
 
     List<EduArticle> selectEduArticleListByUid(@Param("title") String eduTitle, @Param("uid") Long uid);
+
+    Integer selectCount();
 }

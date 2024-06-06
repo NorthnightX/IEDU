@@ -64,4 +64,6 @@ public interface IEduArticleService
     List<EduArticle> selectArticleByKeyWord(String text, Integer pageSize, Integer pageNum);
 
     int selectCountByKeyWord(String text);
+
+    Integer selectCount();
 }

@@ -2,6 +2,7 @@ package com.iedu.service.service;
 
 import java.util.List;
 import com.iedu.service.domain.EduAcademy;
+import com.iedu.service.domain.VO.AcademyVO;
 
 /**
  * 院校管理Service接口
@@ -25,7 +26,7 @@ public interface IEduAcademyService
      * @param eduAcademy 院校管理
      * @return 院校管理集合
      */
-    public List<EduAcademy> selectEduAcademyList(EduAcademy eduAcademy);
+    public List<AcademyVO> selectEduAcademyList(EduAcademy eduAcademy);
 
     /**
      * 新增院校管理
@@ -58,4 +59,10 @@ public interface IEduAcademyService
      * @return 结果
      */
     public int deleteEduAcademyByEduId(Long eduId);
+
+    List<AcademyVO> selectEduAcademyUList(EduAcademy eduAcademy);
+
+    AcademyVO selectDetailById(Long id);
+
+    Integer selectCount();
 }

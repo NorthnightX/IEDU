@@ -60,6 +60,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              AND edu_create_user = #{uid}
         </where>
     </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(1) from edu_news
+    </select>
 
     <insert id="insertEduNews" parameterType="EduNews" useGeneratedKeys="true" keyProperty="eduId">
         insert into edu_news

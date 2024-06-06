@@ -64,4 +64,6 @@ public interface IEduNewsService
     List<EduNews> selectNewsByKeyWord(String text, Integer pageSize, Integer pageNum);
 
     int selectCountByKeyWord(String text);
+
+    Integer selectCount();
 }

@@ -72,12 +72,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectEduCompanyList" parameterType="EduCompany" resultMap="CompanyVO">
         <include refid="VO"/>
         <where>  
-            <if test="eduCompanyName != null  and eduCompanyName != ''"> and edu_company_name like concat('%', #{eduCompanyName}, '%')</if>
-            <if test="eduCompanyScaleId != null "> and edu_company_scale_id = #{eduCompanyScaleId}</if>
-            <if test="eduCompanyIndustryId != null "> and edu_company_industry_id = #{eduCompanyIndustryId}</if>
+            <if test="eduId != null"> and c.edu_id = #{eduId}</if>
+            <if test="eduCompanyName != null  and eduCompanyName != ''"> and c.edu_company_name like concat('%', #{eduCompanyName}, '%')</if>
+            <if test="eduCompanyScaleId != null "> and c.edu_company_scale_id = #{eduCompanyScaleId}</if>
+            <if test="eduCompanyIndustryId != null "> and c.edu_company_industry_id = #{eduCompanyIndustryId}</if>
             <if test="eduFinancingStageId != null "> and edu_financing_stage_id = #{eduFinancingStageId}</if>
-            <if test="eduCompanyIntroduce != null  and eduCompanyIntroduce != ''"> and edu_company_introduce = #{eduCompanyIntroduce}</if>
-            <if test="eduInformationId != null "> and edu_information_id = #{eduInformationId}</if>
+            <if test="eduCompanyIntroduce != null  and eduCompanyIntroduce != ''"> and c.edu_company_introduce = #{eduCompanyIntroduce}</if>
+            <if test="eduInformationId != null "> and c.edu_information_id = #{eduInformationId}</if>
         </where>
     </select>
     
@@ -86,7 +87,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where edu_id = #{eduId}
     </select>
     <select id="selectAllCompany" parameterType="EduCompany" resultMap="EduCompanyResult">
-        select edu_id, edu_company_name from edu_company
+        select edu_id, edu_company_name, edu_company_industry_id from edu_company
+    </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(1) from edu_company
     </select>
 
     <insert id="insertEduCompany" parameterType="EduCompany" useGeneratedKeys="true" keyProperty="eduId">

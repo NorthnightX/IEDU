@@ -38,7 +38,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectEduAcademyVo"/>
         where edu_id = #{eduId}
     </select>
-        
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(1) from edu_academy
+    </select>
+
     <insert id="insertEduAcademy" parameterType="EduAcademy" useGeneratedKeys="true" keyProperty="eduId">
         insert into edu_academy
         <trim prefix="(" suffix=")" suffixOverrides=",">

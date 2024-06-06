@@ -2,6 +2,9 @@ package com.iedu.service.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.iedu.service.domain.VO.AcademyVO;
+import com.iedu.service.domain.VO.CompanyVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +45,7 @@ public class EduAcademyController extends BaseController
     public TableDataInfo list(EduAcademy eduAcademy)
     {
         startPage();
-        List<EduAcademy> list = eduAcademyService.selectEduAcademyList(eduAcademy);
+        List<AcademyVO> list = eduAcademyService.selectEduAcademyList(eduAcademy);
         return getDataTable(list);
     }
 
@@ -54,8 +57,8 @@ public class EduAcademyController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, EduAcademy eduAcademy)
     {
-        List<EduAcademy> list = eduAcademyService.selectEduAcademyList(eduAcademy);
-        ExcelUtil<EduAcademy> util = new ExcelUtil<EduAcademy>(EduAcademy.class);
+        List<AcademyVO> list = eduAcademyService.selectEduAcademyList(eduAcademy);
+        ExcelUtil<AcademyVO> util = new ExcelUtil<>(AcademyVO.class);
         util.exportExcel(response, list, "院校管理数据");
     }
 
@@ -100,5 +103,20 @@ public class EduAcademyController extends BaseController
     public AjaxResult remove(@PathVariable Long[] eduIds)
     {
         return toAjax(eduAcademyService.deleteEduAcademyByEduIds(eduIds));
+    }
+
+    @GetMapping("/u/list")
+    public TableDataInfo uList(EduAcademy eduAcademy)
+    {
+        startPage();
+        List<AcademyVO> list = eduAcademyService.selectEduAcademyUList(eduAcademy);
+        return getDataTable(list);
+    }
+
+    @GetMapping("/u/detail/{id}")
+    public AjaxResult detail(@PathVariable Long id)
+    {
+        AcademyVO vo = eduAcademyService.selectDetailById(id);
+        return success(vo);
     }
 }

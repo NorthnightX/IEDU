@@ -130,4 +130,9 @@ public class EduNewsServiceImpl implements IEduNewsService
         return eduNewsMapper.selectCountByKeyWord(text);
     }
 
+    @Override
+    public Integer selectCount() {
+        return eduNewsMapper.selectCount();
+    }
+
 }

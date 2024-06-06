@@ -1,6 +1,8 @@
 package com.iedu.service.service;
 
 import java.util.List;
+
+import com.iedu.service.domain.Chart;
 import com.iedu.service.domain.EduCompany;
 import com.iedu.service.domain.VO.CompanyVO;
 
@@ -61,4 +63,12 @@ public interface IEduCompanyService
     public int deleteEduCompanyByEduId(Long eduId);
 
     List<EduCompany> selectAll();
+
+    List<CompanyVO> selectEduCompanyUList(EduCompany eduCompany);
+
+    CompanyVO selectDetailById(Long id);
+
+    Integer selectCount();
+
+    List<Chart> selectCompanyIndustryProportion();
 }

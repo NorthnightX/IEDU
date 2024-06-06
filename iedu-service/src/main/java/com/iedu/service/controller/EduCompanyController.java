@@ -109,4 +109,19 @@ public class EduCompanyController extends BaseController
     {
         return success(eduCompanyService.selectAll());
     }
+
+
+    @GetMapping("/u/list")
+    public TableDataInfo uList(EduCompany eduCompany)
+    {
+        startPage();
+        List<CompanyVO> list = eduCompanyService.selectEduCompanyUList(eduCompany);
+        return getDataTable(list);
+    }
+    @GetMapping("/u/detail/{id}")
+    public AjaxResult detail(@PathVariable Long id)
+    {
+        CompanyVO vo = eduCompanyService.selectDetailById(id);
+        return success(vo);
+    }
 }

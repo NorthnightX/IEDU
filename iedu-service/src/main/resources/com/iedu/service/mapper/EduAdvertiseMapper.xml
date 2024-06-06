@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iedu.service.mapper.EduAdvertiseMapper">
+    
+    <resultMap type="EduAdvertise" id="EduAdvertiseResult">
+        <result property="eduId"    column="edu_id"    />
+        <result property="eduLink"    column="edu_link"    />
+        <result property="eduTarget"    column="edu_target"    />
+        <result property="eduLocation"    column="edu_location"    />
+        <result property="eduExpiredTime"    column="edu_expired_time"    />
+    </resultMap>
+
+    <sql id="selectEduAdvertiseVo">
+        select edu_id, edu_link, edu_target, edu_location, edu_expired_time from edu_advertise
+    </sql>
+
+    <select id="selectEduAdvertiseList" parameterType="EduAdvertise" resultMap="EduAdvertiseResult">
+        <include refid="selectEduAdvertiseVo"/>
+        <where>  
+            <if test="eduLink != null  and eduLink != ''"> and edu_link = #{eduLink}</if>
+            <if test="eduTarget != null  and eduTarget != ''"> and edu_target = #{eduTarget}</if>
+            <if test="eduLocation != null "> and edu_location = #{eduLocation}</if>
+            <if test="eduExpiredTime != null "> and edu_expired_time = #{eduExpiredTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduAdvertiseByEduId" parameterType="Long" resultMap="EduAdvertiseResult">
+        <include refid="selectEduAdvertiseVo"/>
+        where edu_id = #{eduId}
+    </select>
+        
+    <insert id="insertEduAdvertise" parameterType="EduAdvertise" useGeneratedKeys="true" keyProperty="eduId">
+        insert into edu_advertise
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eduLink != null">edu_link,</if>
+            <if test="eduTarget != null">edu_target,</if>
+            <if test="eduLocation != null">edu_location,</if>
+            <if test="eduExpiredTime != null">edu_expired_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eduLink != null">#{eduLink},</if>
+            <if test="eduTarget != null">#{eduTarget},</if>
+            <if test="eduLocation != null">#{eduLocation},</if>
+            <if test="eduExpiredTime != null">#{eduExpiredTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduAdvertise" parameterType="EduAdvertise">
+        update edu_advertise
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eduLink != null">edu_link = #{eduLink},</if>
+            <if test="eduTarget != null">edu_target = #{eduTarget},</if>
+            <if test="eduLocation != null">edu_location = #{eduLocation},</if>
+            <if test="eduExpiredTime != null">edu_expired_time = #{eduExpiredTime},</if>
+        </trim>
+        where edu_id = #{eduId}
+    </update>
+
+    <delete id="deleteEduAdvertiseByEduId" parameterType="Long">
+        delete from edu_advertise where edu_id = #{eduId}
+    </delete>
+
+    <delete id="deleteEduAdvertiseByEduIds" parameterType="String">
+        delete from edu_advertise where edu_id in 
+        <foreach item="eduId" collection="array" open="(" separator="," close=")">
+            #{eduId}
+        </foreach>
+    </delete>
+</mapper>

@@ -69,4 +69,6 @@ public interface EduNewsMapper
     int selectCountByKeyWord(String text);
 
     List<EduNews> selectEduNewsListByUserId(@Param("title") String title, @Param("uid") Long uid);
+
+    Integer selectCount();
 }

@@ -1,6 +1,8 @@
 package com.iedu.service.service;
 
 import java.util.List;
+
+import com.iedu.service.domain.Chart;
 import com.iedu.service.domain.EduRecruit;
 import com.iedu.service.domain.VO.RecruitVO;
 
@@ -67,4 +69,6 @@ public interface IEduRecruitService
     List<RecruitVO> selectRecruitByCondition(String text, Integer pageSize, Integer pageNum, Integer jobTypeId);
 
     int selectCountByCondition(String text, Integer jobTypeId);
+
+    List<Chart> selectJobTypeProportion();
 }

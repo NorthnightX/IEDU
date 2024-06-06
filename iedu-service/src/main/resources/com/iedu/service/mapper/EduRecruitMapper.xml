@@ -132,6 +132,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="recruit.eduJobName != null  and recruit.eduJobName != ''"> and recruit.edu_job_name like concat('%', #{recruit.eduJobName}, '%')</if>
          AND recruit.edu_create_user = #{uid}
     </select>
+    <select id="selectAll" resultMap="EduRecruitResult">
+        select edu_id, edu_job_name, edu_job_type_id from edu_recruit
+    </select>
 
     <insert id="insertEduRecruit" parameterType="EduRecruit" useGeneratedKeys="true" keyProperty="eduId">
         insert into edu_recruit

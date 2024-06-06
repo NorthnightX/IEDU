@@ -2,6 +2,9 @@ package com.iedu.service.domain.VO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.iedu.common.annotation.Excel;
+import com.iedu.service.domain.EduCompanyAddress;
+import com.iedu.service.domain.EduCompanyInformation;
+import com.iedu.service.domain.EduCompanyPic;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +20,33 @@ public class CompanyVO {
     @Excel(name = "公司规模")
     private Long eduCompanyScaleId;
     private String eduCompanyScaleName;
+    private EduCompanyInformation eduCompanyInformation;
+    private CompanyAddressVO companyAddressVO;
+    private EduCompanyPic eduCompanyPic;
+
+    public EduCompanyInformation getEduCompanyInformation() {
+        return eduCompanyInformation;
+    }
+
+    public void setEduCompanyInformation(EduCompanyInformation eduCompanyInformation) {
+        this.eduCompanyInformation = eduCompanyInformation;
+    }
+
+    public CompanyAddressVO getCompanyAddressVO() {
+        return companyAddressVO;
+    }
+
+    public void setCompanyAddressVO(CompanyAddressVO companyAddressVO) {
+        this.companyAddressVO = companyAddressVO;
+    }
+
+    public EduCompanyPic getEduCompanyPic() {
+        return eduCompanyPic;
+    }
+
+    public void setEduCompanyPic(EduCompanyPic eduCompanyPic) {
+        this.eduCompanyPic = eduCompanyPic;
+    }
 
     /** 公司行业 */
     @Excel(name = "公司行业")

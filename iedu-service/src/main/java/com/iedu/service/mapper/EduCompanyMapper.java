@@ -63,4 +63,6 @@ public interface EduCompanyMapper
     public int deleteEduCompanyByEduIds(Long[] eduIds);
 
     List<EduCompany> selectAllCompany();
+
+    Integer selectCount();
 }

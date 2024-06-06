@@ -60,4 +60,6 @@ public interface EduAcademyMapper
      * @return 结果
      */
     public int deleteEduAcademyByEduIds(Long[] eduIds);
+
+    Integer selectCount();
 }

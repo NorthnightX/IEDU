@@ -1,12 +1,17 @@
 package com.iedu.service.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.iedu.common.core.domain.entity.SysRole;
 import com.iedu.common.core.domain.entity.SysUser;
 import com.iedu.common.utils.SecurityUtils;
+import com.iedu.service.domain.Chart;
+import com.iedu.service.domain.EduJobType;
 import com.iedu.service.domain.VO.RecruitVO;
+import com.iedu.service.mapper.EduJobTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.iedu.service.mapper.EduRecruitMapper;
@@ -24,6 +29,8 @@ public class EduRecruitServiceImpl implements IEduRecruitService
 {
     @Autowired
     private EduRecruitMapper eduRecruitMapper;
+    @Autowired
+    private EduJobTypeMapper jobTypeMapper;
 
     /**
      * 查询招聘信息
@@ -132,6 +139,36 @@ public class EduRecruitServiceImpl implements IEduRecruitService
     @Override
     public int selectCountByCondition(String text, Integer jobTypeId) {
         return eduRecruitMapper.selectCountByCondition(text, jobTypeId);
+    }
+
+    @Override
+    public List<Chart> selectJobTypeProportion() {
+        List<EduRecruit> list = eduRecruitMapper.selectAll();
+        return fillList(list);
+    }
+
+    public List<Chart> fillList(List<EduRecruit> list){
+        HashMap<String, Integer> m = new HashMap<>();
+        for (EduRecruit recruit : list) {
+            Long jid = recruit.getEduJobTypeId();
+            EduJobType jobType = jobTypeMapper.selectEduJobTypeByEduId(jid);
+            String root = dfs(jobType);
+            m.put(root, m.getOrDefault(root, 0) + 1);
+        }
+        List<Chart> ans = new ArrayList<>();
+        for (String l : m.keySet()) {
+            Chart c = new Chart();
+            c.setSpan(l);
+            c.setV(m.get(l));
+            ans.add(c);
+        }
+        return ans;
+    }
+    private String dfs(EduJobType cur){
+        if(cur.getEduFaId() == 0L){
+            return cur.getEduName();
+        }
+        return dfs(jobTypeMapper.selectEduJobTypeByEduId(cur.getEduFaId()));
     }
 
 }
