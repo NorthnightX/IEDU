@@ -78,19 +78,16 @@ function accountLogout(){
   })
 }
 function toProfile(){
-  router.push({path: '/u/profile'});
+  const timestamp = Date.now();
+  router.push({path: '/u/profile', query:{t: timestamp}});
 }
 function toAcademy(){
-  router.push({path: '/'});
+  const timestamp = Date.now();
+  router.push({path: '/u/cooperate', query: {type: '院校', t: timestamp}});
 }
 function toCompany(){
-  router.push({path: '/'});
-}
-function toRecruit(){
-  router.push({path: '/'});
-}
-function toIntegrate(){
-  router.push({path: '/'});
+  const timestamp = Date.now();
+  router.push({path: '/u/cooperate', query: {type: '企业',t: timestamp}});
 }
 const showLoginButton = ref(true)
 async function isLogin()  {
@@ -153,6 +150,10 @@ function handleRegister() {
     }
   });
 }
+function toDeliverRecord(){
+  const timestamp = Date.now();
+  router.push({path: '/u/deliverRecord', query:{t: timestamp}});
+}
 isLogin()
 </script>
 
@@ -172,8 +173,6 @@ isLogin()
         <el-button style="font-size: 16px;color: #181818" type="text" @click="toHome()">首页</el-button>
         <el-button class="home_menu_button" type="text" @click="toAcademy()">院校</el-button>
         <el-button class="home_menu_button" type="text" @click="toCompany()">企业</el-button>
-        <el-button class="home_menu_button" type="text" @click="toRecruit()">求职</el-button>
-        <el-button class="home_menu_button" type="text" @click="toIntegrate()">产教融合</el-button>
 <!--        <el-button class="home_menu_button" type="text">互助交流</el-button>-->
       </div>
     </div>
@@ -201,6 +200,7 @@ isLogin()
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="toProfile()">个人中心</el-dropdown-item>
+            <el-dropdown-item @click="toDeliverRecord()">投递记录</el-dropdown-item>
             <el-dropdown-item  @click="accountLogout()">账号登出</el-dropdown-item>
           </el-dropdown-menu>
         </template>

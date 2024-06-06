@@ -2,10 +2,10 @@
 
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="公司名" prop="eduCompanyName">
+      <el-form-item label="企业名" prop="eduCompanyName">
         <el-input
             v-model="queryParams.eduCompanyName"
-            placeholder="请输入公司名"
+            placeholder="请输入企业名"
             clearable
             @keyup.enter="handleQuery"
         />
@@ -79,33 +79,53 @@
         >编辑工商信息
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+            type="success"
+            plain
+            icon="Edit"
+            :disabled="single"
+            @click="handlePic"
+        >编辑企业相册
+        </el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="companyList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="id" align="center" prop="eduId"/>
-      <el-table-column label="公司名" align="center" prop="eduCompanyName"/>
-      <el-table-column label="公司规模" align="center" prop="eduCompanyScaleName"/>
-      <el-table-column label="公司行业" align="center" prop="eduCompanyIndustryName"/>
+      <el-table-column label="企业名" align="center" prop="eduCompanyName"/>
+      <el-table-column label="企业规模" align="center" prop="eduCompanyScaleName"/>
+      <el-table-column label="企业行业" align="center" prop="eduCompanyIndustryName"/>
       <el-table-column label="融资阶段" align="center" prop="eduFinancingStageName"/>
-      <el-table-column label="公司简介" align="center" prop="eduCompanyIntroduce" width="120px">
+      <el-table-column label="企业logo" align="center" width="130px">
+        <template #default="scope">
+          <image-preview v-if="scope.row.eduCompanyPic !== null" style="width: 100px" :src="scope.row.eduCompanyPic.eduLogo"></image-preview>
+        </template>
+      </el-table-column>
+      <el-table-column label="企业照片墙" align="center" width="130px">
+        <template #default="scope">
+          <image-preview v-if="scope.row.eduCompanyPic !== null"  style="width: 100px"  :src="scope.row.eduCompanyPic.eduImages"></image-preview>
+        </template>
+      </el-table-column>
+      <el-table-column label="企业简介" align="center" prop="eduCompanyIntroduce" width="120px">
         <template #default="{ row }">
           <el-button type="text" @click="showDetailDialog(row.eduCompanyIntroduce)">
             点击查看详情
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="公司详细信息" width="120" align="center" prop="eduInformationId">
+      <el-table-column label="企业详细信息" width="120" align="center" prop="eduInformationId">
         <template #default="{ row }">
-          <el-button type="text" @click="showInformationDialog(row.eduInformationId)">
+          <el-button v-if="row.eduInformationId !== null" type="text" @click="showInformationDialog(row.eduInformationId)">
             查看工商信息
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="公司地址" align="center" prop="eduAddressId" width="120px">
+      <el-table-column label="企业地址" align="center" prop="eduAddressId" width="120px">
         <template #default="{ row }">
-          <el-button type="text" @click="showAddressDialog(row.eduId)">
+          <el-button v-if="row.eduAddressId !== null" type="text" @click="showAddressDialog(row.eduId)">
             查看详细地址
           </el-button>
         </template>
@@ -145,13 +165,13 @@
     <!-- 添加或修改公司对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
       <el-form ref="companyRef" :model="form" :rules="rules" label-width="90px">
-        <el-form-item label="公司名" prop="eduCompanyName">
-          <el-input v-model="form.eduCompanyName" placeholder="请输入公司名"/>
+        <el-form-item label="企业名" prop="eduCompanyName">
+          <el-input v-model="form.eduCompanyName" placeholder="请输入企业名"/>
         </el-form-item>
-        <el-form-item label="公司规模" prop="eduCompanyScaleId">
+        <el-form-item label="企业规模" prop="eduCompanyScaleId">
           <el-select
               v-model="form.eduCompanyScaleId"
-              placeholder="请选择公司规模"
+              placeholder="请选择企业规模"
               style="width: 240px"
           >
             <el-option
@@ -162,7 +182,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="公司行业" prop="eduCompanyIndustryId">
+        <el-form-item label="企业行业" prop="eduCompanyIndustryId">
           <el-cascader
               v-model="form.eduCompanyIndustryId"
               :options="industryList"
@@ -182,7 +202,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="公司简介" prop="eduCompanyIntroduce">
+        <el-form-item label="企业简介" prop="eduCompanyIntroduce">
           <el-input v-model="form.eduCompanyIntroduce" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>
@@ -194,8 +214,8 @@
       </template>
     </el-dialog>
     <!-- 添加或修改公司信息对话框 -->
-    <el-dialog :title="informationTitle" v-model="informationOpen" width="600px" append-to-body>
-      <el-form ref="informationRef" :model="informationForm" :rules="informationRules" label-width="100px">
+    <el-dialog :title="informationTitle" v-model="informationOpen" width="700px" append-to-body>
+      <el-form ref="informationRef" :model="informationForm" :rules="informationRules" label-width="120px">
         <el-form-item label="法定代表人" prop="eduLegalRepresentative">
           <el-input v-model="informationForm.eduLegalRepresentative" placeholder="请输入法定代表人"/>
         </el-form-item>
@@ -283,13 +303,30 @@
     </el-dialog>
     <el-dialog v-model="addressDialogVisible" width="800">
       <el-table :data="addressDialogData">
-        <el-table-column label="公司" align="center" prop="companyName" />
+        <el-table-column label="企业" align="center" prop="companyName" />
         <el-table-column label="国家" align="center" prop="eduCountryName" />
         <el-table-column label="省" align="center" prop="eduProvinceName" />
         <el-table-column label="市" align="center" prop="eduCityName" />
         <el-table-column label="区" align="center" prop="eduDistrictName" />
         <el-table-column label="详细地址" align="center" prop="eduDetailedAddress" />
       </el-table>
+    </el-dialog>
+
+    <el-dialog :title="picTitle" v-model="picOpen" width="700px" append-to-body>
+      <el-form  :model="picForm" label-width="80px">
+        <el-form-item label="Logo" prop="eduLogo">
+          <image-upload v-model="picForm.eduLogo" limit="1"/>
+        </el-form-item>
+        <el-form-item label="照片墙" prop="eduImages">
+          <image-upload v-model="picForm.eduImages"/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitPicForm">确 定</el-button>
+          <el-button @click="cancelPicForm">取 消</el-button>
+        </div>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -305,9 +342,18 @@ import {
   getInformationByCompany,
   updateInformation
 } from "@/api/service/information.js";
-import {addAddress, getAddressByCompany, getAddressVOAsListByCompany, updateAddress} from "@/api/service/address.js";
+import {
+  addAddress,
+  getAddressByCompany,
+  getAddressVOAsListByCompany,
+  updateAddress
+} from "@/api/service/address.js";
 import {getDistrictList} from "@/api/service/provinces.js";
 import {ElMessageBox} from "element-plus";
+import ImageUpload from "@/components/ImageUpload/index.vue";
+import {addAcademyPic, updateAcademyPic} from "@/api/service/academyPic.js";
+import {addCompanyPic, getPicByCompany, updateCompanyPic} from "@/api/service/companyPic.js";
+import ImagePreview from "@/components/ImagePreview/index.vue";
 const informationDialogVisible = ref(false)
 const informationDialogData = ref([])
 const addressDialogVisible = ref(false)
@@ -435,7 +481,7 @@ function showDetailDialog(content){
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加公司";
+  title.value = "添加企业";
 }
 
 /** 修改按钮操作 */
@@ -445,7 +491,7 @@ function handleUpdate(row) {
   getCompany(_eduId).then(response => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改公司";
+    title.value = "修改企业";
   });
 }
 
@@ -475,7 +521,7 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _eduIds = row.eduId || ids.value;
-  proxy.$modal.confirm('是否确认删除公司编号为"' + _eduIds + '"的数据项？').then(function () {
+  proxy.$modal.confirm('是否确认删除企业编号为"' + _eduIds + '"的数据项？').then(function () {
     return delCompany(_eduIds);
   }).then(() => {
     getList();
@@ -536,6 +582,23 @@ function handleAddress(row) {
   })
 }
 
+const picOpen = ref(false)
+const picTitle = ref(false)
+const picForm = ref({})
+function handlePic(){
+  getPicByCompany(ids.value[0]).then((res) => {
+    const having = res.data
+    picForm.value.eduCompanyId = ids.value[0]
+    if (!having) {
+      picOpen.value = true;
+      picTitle.value = "添加相册信息";
+      return;
+    }
+    picForm.value = res.data
+    picOpen.value = true;
+    picTitle.value = "修改相册信息";
+  })
+}
 function submitInformationForm() {
   proxy.$refs["informationRef"].validate(valid => {
     if (valid) {
@@ -636,7 +699,32 @@ function resetAddressForm(){
     eduDetailedAddress: null
   }
 }
+function submitPicForm() {
+  if (picForm.value.eduId != null) {
+    updateCompanyPic(picForm.value).then(response => {
+      proxy.$modal.msgSuccess("修改成功");
+      picOpen.value = false;
+      getList();
+    });
+  } else {
+    addCompanyPic(picForm.value).then(response => {
+      proxy.$modal.msgSuccess("新增成功");
+      picOpen.value = false;
+      getList();
+    });
+  }
+}
 
+function cancelPicForm() {
+  picOpen.value = false;
+  resetPicForm();
+}
+function resetPicForm(){
+  picForm.value = {
+    eduLogo : null,
+    eduImages : null
+  }
+}
 getScaleList();
 getStageList();
 getIndustryList();

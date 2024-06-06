@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="规模" prop="eduScale">
+      <el-form-item label="企业ID" prop="eduCompanyId">
         <el-input
-          v-model="queryParams.eduScale"
-          placeholder="请输入规模"
+          v-model="queryParams.eduCompanyId"
+          placeholder="请输入企业ID"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -16,15 +16,15 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="Plus"
-          @click="handleAdd"
-          v-hasPermi="['service:scale:add']"
-        >新增</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="primary"-->
+<!--          plain-->
+<!--          icon="Plus"-->
+<!--          @click="handleAdd"-->
+<!--          v-hasPermi="['service:companyPic:add']"-->
+<!--        >新增</el-button>-->
+<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -32,7 +32,7 @@
           icon="Edit"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['service:scale:edit']"
+          v-hasPermi="['service:companyPic:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -42,7 +42,7 @@
           icon="Delete"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['service:scale:remove']"
+          v-hasPermi="['service:companyPic:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -51,32 +51,30 @@
           plain
           icon="Download"
           @click="handleExport"
-          v-hasPermi="['service:scale:export']"
+          v-hasPermi="['service:companyPic:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="scaleList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="companyPicList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="企业规模" align="center" prop="eduId" />
-      <el-table-column label="规模" align="center" prop="eduScale" />
-      <el-table-column label="创建人" align="center" prop="eduCreateUser" />
-      <el-table-column label="修改人" align="center" prop="eduModifyUser" />
-      <el-table-column label="创建时间" align="center" prop="eduCreateTime" width="180">
+      <el-table-column label="id" align="center" prop="eduId" />
+      <el-table-column label="企业ID" align="center" prop="eduCompanyId" />
+      <el-table-column label="企业logo" align="center" prop="eduLogo">
         <template #default="scope">
-          <span>{{ parseTime(scope.row.eduCreateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <image-preview style="width: 100px" :src="scope.row.eduLogo"></image-preview>
         </template>
       </el-table-column>
-      <el-table-column label="修改时间" align="center" prop="eduModifyTime" width="180">
+      <el-table-column label="企业照片墙" align="center" prop="eduImages">
         <template #default="scope">
-          <span>{{ parseTime(scope.row.eduModifyTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <image-preview  style="width: 100px"  :src="scope.row.eduImages"></image-preview>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['service:scale:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['service:scale:remove']">删除</el-button>
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['service:companyPic:edit']">修改</el-button>
+          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['service:companyPic:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,11 +87,17 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改公司规模对话框 -->
+    <!-- 添加或修改企业照片对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="scaleRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="规模" prop="eduScale">
-          <el-input v-model="form.eduScale" placeholder="请输入规模" />
+      <el-form ref="companyPicRef" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="企业ID" prop="eduCompanyId">
+          <el-input v-model="form.eduCompanyId" placeholder="请输入企业ID" />
+        </el-form-item>
+        <el-form-item label="企业logo" prop="eduLogo">
+          <el-input v-model="form.eduLogo" placeholder="请输入企业logo" />
+        </el-form-item>
+        <el-form-item label="企业照片墙" prop="eduImages">
+          <el-input v-model="form.eduImages" placeholder="请输入企业照片墙" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -106,12 +110,13 @@
   </div>
 </template>
 
-<script setup name="Scale">
-import { listScale, getScale, delScale, addScale, updateScale } from "@/api/service/scale";
+<script setup name="CompanyPic">
+import { listCompanyPic, getCompanyPic, delCompanyPic, addCompanyPic, updateCompanyPic } from "@/api/service/companyPic";
+import ImagePreview from "@/components/ImagePreview/index.vue";
 
 const { proxy } = getCurrentInstance();
 
-const scaleList = ref([]);
+const companyPicList = ref([]);
 const open = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
@@ -126,11 +131,7 @@ const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    eduScale: null,
-    eduCreateUser: null,
-    eduModifyUser: null,
-    eduCreateTime: null,
-    eduModifyTime: null
+    eduCompanyId: null,
   },
   rules: {
   }
@@ -138,11 +139,11 @@ const data = reactive({
 
 const { queryParams, form, rules } = toRefs(data);
 
-/** 查询公司规模列表 */
+/** 查询企业照片列表 */
 function getList() {
   loading.value = true;
-  listScale(queryParams.value).then(response => {
-    scaleList.value = response.rows;
+  listCompanyPic(queryParams.value).then(response => {
+    companyPicList.value = response.rows;
     total.value = response.total;
     loading.value = false;
   });
@@ -158,13 +159,11 @@ function cancel() {
 function reset() {
   form.value = {
     eduId: null,
-    eduScale: null,
-    eduCreateUser: null,
-    eduModifyUser: null,
-    eduCreateTime: null,
-    eduModifyTime: null
+    eduCompanyId: null,
+    eduLogo: null,
+    eduImages: null
   };
-  proxy.resetForm("scaleRef");
+  proxy.resetForm("companyPicRef");
 }
 
 /** 搜索按钮操作 */
@@ -190,32 +189,32 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加企业规模";
+  title.value = "添加企业照片";
 }
 
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
   const _eduId = row.eduId || ids.value
-  getScale(_eduId).then(response => {
+  getCompanyPic(_eduId).then(response => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改企业规模";
+    title.value = "修改企业照片";
   });
 }
 
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs["scaleRef"].validate(valid => {
+  proxy.$refs["companyPicRef"].validate(valid => {
     if (valid) {
       if (form.value.eduId != null) {
-        updateScale(form.value).then(response => {
+        updateCompanyPic(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
           getList();
         });
       } else {
-        addScale(form.value).then(response => {
+        addCompanyPic(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
           open.value = false;
           getList();
@@ -228,8 +227,8 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _eduIds = row.eduId || ids.value;
-  proxy.$modal.confirm('是否确认删除企业规模编号为"' + _eduIds + '"的数据项？').then(function() {
-    return delScale(_eduIds);
+  proxy.$modal.confirm('是否确认删除企业照片编号为"' + _eduIds + '"的数据项？').then(function() {
+    return delCompanyPic(_eduIds);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");
@@ -238,9 +237,9 @@ function handleDelete(row) {
 
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download('service/scale/export', {
+  proxy.download('service/companyPic/export', {
     ...queryParams.value
-  }, `scale_${new Date().getTime()}.xlsx`)
+  }, `companyPic_${new Date().getTime()}.xlsx`)
 }
 
 getList();

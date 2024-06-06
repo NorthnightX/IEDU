@@ -69,7 +69,17 @@
             icon="Edit"
             :disabled="single"
             @click="handleAddress"
-        >编辑学校地址
+        >编辑院校地址
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+            type="success"
+            plain
+            icon="Edit"
+            :disabled="single"
+            @click="handlePic"
+        >编辑院校相册
         </el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
@@ -80,18 +90,28 @@
       <el-table-column label="id" align="center" prop="eduId" />
       <el-table-column label="院校名" align="center" prop="eduAcademyName" />
       <el-table-column label="院校标签" align="center" prop="eduAcademyTag" />
-      <el-table-column label="院校介绍" align="center" prop="eduAcademyIntroduce">
+      <el-table-column label="院校介绍" align="center" prop="eduAcademyIntroduce" width="130px">
         <template #default="{ row }">
           <el-button type="text" @click="showDetailDialog(row.eduAcademyIntroduce)">
             点击查看详情
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="院校地址" align="center" prop="eduAddressId">
+      <el-table-column label="院校地址" align="center" prop="eduAddressId" width="130px">
         <template #default="{ row }">
           <el-button type="text" @click="showAddressDialog(row.eduId)">
             查看详细地址
           </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="院校logo" align="center" width="130px">
+        <template #default="scope">
+          <image-preview v-if="scope.row.eduAcademyPic !== null" style="width: 100px" :src="scope.row.eduAcademyPic.eduLogo"></image-preview>
+        </template>
+      </el-table-column>
+      <el-table-column label="院校照片墙" align="center" width="130px">
+        <template #default="scope">
+          <image-preview  v-if="scope.row.eduAcademyPic !== null"  style="width: 100px"  :src="scope.row.eduAcademyPic.eduImages"></image-preview>
         </template>
       </el-table-column>
       <el-table-column label="创建人" align="center" prop="eduCreateUser" />
@@ -123,7 +143,7 @@
     />
 
     <!-- 添加或修改院校管理对话框 -->
-    <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+    <el-dialog :title="title" v-model="open" width="700px" append-to-body>
       <el-form ref="academyRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="院校名" prop="eduAcademyName">
           <el-input v-model="form.eduAcademyName" placeholder="请输入院校名" />
@@ -139,6 +159,23 @@
         <div class="dialog-footer">
           <el-button type="primary" @click="submitForm">确 定</el-button>
           <el-button @click="cancel">取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <el-dialog :title="picTitle" v-model="picOpen" width="700px" append-to-body>
+      <el-form  :model="picForm" label-width="80px">
+        <el-form-item label="Logo" prop="eduLogo">
+          <image-upload v-model="picForm.eduLogo" limit="1"/>
+        </el-form-item>
+        <el-form-item label="照片墙" prop="eduImages">
+          <image-upload v-model="picForm.eduImages"/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submitPicForm">确 定</el-button>
+          <el-button @click="cancelPicForm">取 消</el-button>
         </div>
       </template>
     </el-dialog>
@@ -187,6 +224,9 @@ import {
   updateAcademyAddress
 } from "@/api/service/academyAddress.js";
 import {ElMessageBox} from "element-plus";
+import {addAcademyPic, getPicByAcademy, updateAcademyPic} from "@/api/service/academyPic.js";
+import ImageUpload from "@/components/ImageUpload/index.vue";
+import ImagePreview from "@/components/ImagePreview/index.vue";
 const addressDialogVisible = ref(false)
 const addressDialogData = ref([])
 const { proxy } = getCurrentInstance();
@@ -363,6 +403,24 @@ function handleAddress(row) {
     addressTitle.value = "修改地址信息";
   })
 }
+const picOpen = ref(false)
+const picTitle = ref(false)
+const picForm = ref({})
+function handlePic(row) {
+  getPicByAcademy(ids.value[0]).then((res) => {
+    const having = res.data
+    picForm.value.eduAcademyId = ids.value[0]
+    if (!having) {
+      picOpen.value = true;
+      picTitle.value = "添加相册信息";
+      return;
+    }
+    picForm.value = res.data
+    picOpen.value = true;
+    picTitle.value = "修改相册信息";
+  })
+}
+
 function submitAddressFormForm() {
   FillAddress();
   proxy.$refs["addressRef"].validate(valid => {
@@ -382,6 +440,33 @@ function submitAddressFormForm() {
       }
     }
   });
+}
+
+function submitPicForm() {
+  if (picForm.value.eduId != null) {
+    updateAcademyPic(picForm.value).then(response => {
+      proxy.$modal.msgSuccess("修改成功");
+      picOpen.value = false;
+      getList();
+    });
+  } else {
+    addAcademyPic(picForm.value).then(response => {
+      proxy.$modal.msgSuccess("新增成功");
+      picOpen.value = false;
+      getList();
+    });
+  }
+}
+
+function cancelPicForm() {
+  picOpen.value = false;
+  resetPicForm();
+}
+function resetPicForm(){
+  picForm.value = {
+    eduLogo : null,
+    eduImages : null
+  }
 }
 function FillAddress(){
   addressForm.value.eduCountryId = districtIds.value[0]

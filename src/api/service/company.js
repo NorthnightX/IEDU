@@ -48,3 +48,16 @@ export function listAllCompany() {
     method: 'get'
   })
 }
+export function listUCompany(query) {
+  return request({
+    url: '/service/company/u/list',
+    method: 'get',
+    params: query
+  })
+}
+export function getCompanyDetail(eduId) {
+  return request({
+    url: '/service/company/u/detail/' + eduId,
+    method: 'get'
+  })
+}

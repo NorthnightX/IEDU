@@ -184,7 +184,7 @@ function handleAdd(row) {
     form.value.eduFaId = 0;
   }
   open.value = true;
-  title.value = "添加公司行业";
+  title.value = "添加企业行业";
 }
 
 /** 展开/折叠操作 */
@@ -206,7 +206,7 @@ async function handleUpdate(row) {
   getIndustry(row.eduId).then(response => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改公司行业";
+    title.value = "修改企业行业";
   });
 }
 

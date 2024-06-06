@@ -11,6 +11,9 @@ import {getRecruitByCondition,} from "@/api/service/recruit.js";
 import {getIntegratesByCondition} from "@/api/service/integrate.js";
 import {getAllIntegrateType} from "@/api/service/integrateType.js";
 import {listAllType} from "@/api/service/type.js";
+import {getAdvertiseOfSearch} from "@/api/service/advertise.js";
+import ImagePreview from "@/components/ImagePreview/index.vue";
+import API from "../../api/axios.js";
 const menuIdx = ref(1)
 const searchText = ref("")
 const pageNum = ref(1)
@@ -23,7 +26,7 @@ const pageType = ref("")
 const integrateTypeList = ref([]) // 产教融合类型集合
 const eduProjectType= ref(0) // 默认选中产教融合类型
 const eduJobTypeId = ref([1]) // 默认选中工作类型id
-
+const advertiseList = ref([])
 function getIntegrateTypeList(){
   getAllIntegrateType().then((res) => {
     integrateTypeList.value = res.data
@@ -34,8 +37,8 @@ onMounted(() => {
   switch (router.currentRoute.value.query.type) {
     case "integrate" :
       menuIdx.value = 4
-      eduProjectType.value = router.currentRoute.value.query.integrateId
-      searchIntegrate(1)
+      getIntegrateTypeList()
+      searchIntegrate(1, router.currentRoute.value.query.integrateId)
       break
     case "recruit":
       menuIdx.value = 3
@@ -43,6 +46,7 @@ onMounted(() => {
       searchRecruit(1)
       break
     default:
+      menuIdx.value = 1
       searchNews(1)
   }
 })
@@ -86,14 +90,17 @@ function searchRecruit(page){
     totalNum.value = res.data.total
   })
 }
-function searchIntegrate(page){
+function searchIntegrate(page, id){
   pageType.value = "integrate"
   pageList.value = null
   pageNum.value = page
   if(searchText.value.length === 0 || eduProjectType.value.length === 0){
     return
   }
-  getIntegratesByCondition({keyword: searchText.value, typeId: eduProjectType.value ,
+  if(id === undefined ){
+    id = eduProjectType.value
+  }
+  getIntegratesByCondition({keyword: searchText.value, typeId: id ,
     pageSize: pageSize.value, pageNum : pageNum.value}).then((res) => {
     pageList.value =res.data.data
     totalNum.value = res.data.total
@@ -147,6 +154,22 @@ function getJobType() {
     jobTypeList.value = res.data
   })
 }
+
+function getAdvertise(){
+  getAdvertiseOfSearch().then((res) => {
+    advertiseList.value = res.data
+  })
+}
+function toTarget(link){
+  if (!/^https?:\/\//i.test(link)) {
+    link = 'http://' + link;
+  }
+  window.open(link, '_blank');
+}
+function getAdvertiseImage(link){
+  return import.meta.env.VITE_APP_BASE_API + link
+}
+getAdvertise()
 getIntegrateTypeList()
 getJobType()
 </script>
@@ -193,10 +216,10 @@ getJobType()
                     mode="horizontal"
                     :default-active=menuIdx
                 >
-                  <el-menu-item index="1" style="font-size: 18px" @click="searchNews(1)">新闻</el-menu-item>
-                  <el-menu-item index="2" style="font-size: 18px" @click="searchArticle(1)">动态</el-menu-item>
-                  <el-menu-item index="3" style="font-size: 18px" @click="searchRecruit(1)">招聘</el-menu-item>
-                  <el-menu-item index="4" style="font-size: 18px" @click="searchIntegrate(1)">产教融合</el-menu-item>
+                  <el-menu-item :index=1 style="font-size: 18px" @click="searchNews(1)">新闻</el-menu-item>
+                  <el-menu-item :index=2 style="font-size: 18px" @click="searchArticle(1)">动态</el-menu-item>
+                  <el-menu-item :index=3 style="font-size: 18px" @click="searchRecruit(1)">招聘</el-menu-item>
+                  <el-menu-item :index=4 style="font-size: 18px" @click="searchIntegrate(1)">产教融合</el-menu-item>
                 </el-menu>
               </div>
 <!--              新闻，动态-->
@@ -267,6 +290,9 @@ getJobType()
                     <el-divider direction="vertical"></el-divider>
                     <el-text size="small" style="color: #606266">{{item.eduStartTime}} - {{item.eduEndTime}}</el-text>
                   </div>
+                  <div v-if="idx !== pageList.length-1">
+                    <el-divider></el-divider>
+                  </div>
                 </div>
               </div>
               <el-pagination background layout="prev, pager, next"
@@ -280,16 +306,8 @@ getJobType()
         </div>
       </div>
       <div style="flex-direction: column;width: 24%;margin: 5px 0 0 2%;">
-        <div style="height: 300px;width: 70%;border-radius: 10px;background-color: white">
-          <div>
-            <img src="@/assets/background/search_right1.png" alt="" style="width: 100%">
-          </div>
-        </div>
-        <div style="height: 300px;width: 70%;border-radius: 10px;background-color: white;margin-top: 20px">
-          <div>
-            <img src="@/assets/background/search_right2.png" alt="" style="width: 100%">
-          </div>
-        </div>
+        <img :src="getAdvertiseImage(advertiseList[0].eduLink)" class="search_advertise" @click="toTarget(advertiseList[0].eduTarget)"/>
+        <img :src="getAdvertiseImage(advertiseList[1].eduLink)" class="search_advertise" @click="toTarget(advertiseList[1].eduTarget)" style="margin-top: 20px"/>
       </div>
     </div>
     <bottom></bottom>
@@ -323,5 +341,9 @@ getJobType()
 }
 .el-select {
   --el-select-input-focus-border-color: none
+}
+.search_advertise{
+  width: 200px;
+  height: 300px;
 }
 </style>

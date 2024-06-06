@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="公司Id
+      <el-form-item label="企业Id
 " prop="eduCompanyId">
         <el-input
           v-model="queryParams.eduCompanyId"
-          placeholder="请输入公司Id
+          placeholder="请输入企业Id
 "
           clearable
           @keyup.enter="handleQuery"
@@ -53,7 +53,7 @@
     <el-table v-loading="loading" :data="informationList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="Id" align="center" prop="eduId" />
-      <el-table-column label="公司Id" align="center" prop="eduCompanyId" />
+      <el-table-column label="企业" align="center" prop="eduCompanyId" />
       <el-table-column label="法定代表人" width="90" align="center" prop="eduLegalRepresentative" />
       <el-table-column label="企业类型" align="center" prop="eduEnterpriseType" />
       <el-table-column label="注册资本" align="center" prop="eduRegisteredCapital" />
@@ -68,7 +68,13 @@
           <span>{{ parseTime(scope.row.eduEstablishmentDate, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="经营范围 " align="center" prop="eduBusinessScope" />
+      <el-table-column label="经营范围 " align="center" prop="eduBusinessScope" width="120px">
+        <template #default="{ row }">
+          <el-button type="text" @click="showDetailDialog(row.eduBusinessScope)">
+            点击查看详情
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="创建人" align="center" prop="eduCreateUser" />
       <el-table-column label="修改人" align="center" prop="eduModifyUser" />
       <el-table-column label="创建时间" align="center" prop="eduCreateTime" width="180">
@@ -151,6 +157,7 @@
 
 <script setup name="Information">
 import { listInformation, getInformation, delInformation, addInformation, updateInformation } from "@/api/service/information";
+import {ElMessageBox} from "element-plus";
 
 const { proxy } = getCurrentInstance();
 
@@ -189,7 +196,16 @@ const data = reactive({
   rules: {
   }
 });
-
+function showDetailDialog(content){
+  ElMessageBox.alert(
+      content,
+      "内容",
+      {
+        dangerouslyUseHTMLString: true,
+        customStyle: {'max-width': '70%'}
+      }
+  )
+}
 const { queryParams, form, rules } = toRefs(data);
 
 /** 查询公司信息列表 */
@@ -255,7 +271,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加公司信息";
+  title.value = "添加企业信息";
 }
 
 /** 修改按钮操作 */
@@ -265,7 +281,7 @@ function handleUpdate(row) {
   getInformation(_eduId).then(response => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改公司信息";
+    title.value = "修改企业信息";
   });
 }
 
@@ -293,7 +309,7 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _eduIds = row.eduId || ids.value;
-  proxy.$modal.confirm('是否确认删除公司信息编号为"' + _eduIds + '"的数据项？').then(function() {
+  proxy.$modal.confirm('是否确认删除企业信息编号为"' + _eduIds + '"的数据项？').then(function() {
     return delInformation(_eduIds);
   }).then(() => {
     getList();

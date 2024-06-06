@@ -101,6 +101,31 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/u/resume',
+    component: () => import('@/views/u/resume.vue'),
+    hidden: true
+  },
+  {
+    path: '/u/cooperate',
+    component: () => import('@/views/u/cooperate.vue'),
+    hidden: true
+  },
+  {
+    path: '/u/company',
+    component: () => import('@/views/u/company.vue'),
+    hidden: true
+  },
+  {
+    path: '/u/academy',
+    component: () => import('@/views/u/academy.vue'),
+    hidden: true
+  },
+  {
+    path: '/u/deliverRecord',
+    component: () => import('@/views/u/deliverRecord.vue'),
+    hidden: true
+  },
+  {
     path: '/user',
     component: Layout,
     hidden: true,

@@ -86,7 +86,7 @@
       <el-table-column label="发布组织" align="center" prop="eduOrganize"/>
       <el-table-column label="组织类别" align="center" prop="eduOrganizeType">
         <template #default="scope">
-          <span>{{ scope.row.eduOrganizeType === 0 ? "公司" : "院校" }}</span>
+          <span>{{ scope.row.eduOrganizeType === 0 ? "企业" : "院校" }}</span>
         </template>
       </el-table-column>
       <el-table-column label="创建者" align="center" prop="eduCreateUser"/>

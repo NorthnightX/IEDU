@@ -43,7 +43,7 @@ onMounted(() => {
         </div>
       </div>
     </el-card>
-    <el-card style="background-color: white; border-radius: 15px;min-height: 500px;margin: 20px;padding: 0 20px;
+    <el-card style="background-color: white; border-radius: 15px;min-height: 500px;margin: 20px;padding: 20px 20px;
       display: flex;justify-content: left;">
       <div>
         <el-text size="large" style="font-weight: bolder">项目简介：</el-text>

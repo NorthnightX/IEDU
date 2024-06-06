@@ -72,7 +72,7 @@
     <el-table v-loading="loading" :data="recruitList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="Id" align="center" prop="eduId"/>
-      <el-table-column label="公司名" align="center" prop="companyName"/>
+      <el-table-column label="企业名" align="center" prop="companyName"/>
       <el-table-column label="名称" align="center" prop="eduJobName"/>
       <el-table-column label="工作类型" align="center" prop="jobTypeName"/>
       <el-table-column label="城市" align="center" prop="cityName"/>
@@ -96,18 +96,6 @@
       <el-table-column label="截止时间" align="center" prop="eduEndTime" width="180">
         <template #default="scope">
           <span>{{ parseTime(scope.row.eduEndTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建人" align="center" prop="eduCreateUser"/>
-      <el-table-column label="修改人" align="center" prop="eduModifyUser"/>
-      <el-table-column label="创建时间" align="center" prop="eduCreateTime" width="180">
-        <template #default="scope">
-          <span>{{ parseTime(scope.row.eduCreateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="修改时间" align="center" prop="eduModifyTime" width="180">
-        <template #default="scope">
-          <span>{{ parseTime(scope.row.eduModifyTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -334,7 +322,7 @@ function handleAdd() {
   getUserCompany(useUserStore().id).then((res) => {
     if(res.data === -1){
       ElMessage({
-        message: '请先添加公司',
+        message: '请先添加企业',
         type: 'warning'
       });
       return
@@ -360,6 +348,13 @@ function submitForm() {
   getUserCompany(useUserStore().id).then((res) => {
     form.value.eduCompanyId = res.data
   }).then(() => {
+    if(form.value.eduCompanyId === -1){
+      ElMessage({
+        message: '你没有修改权限',
+        type: 'warning'
+      });
+      return
+    }
     form.value.eduCityId = form.value.eduCityId[form.value.eduCityId.length-1]
     form.value.eduJobTypeId = form.value.eduJobTypeId[form.value.eduJobTypeId.length-1]
     proxy.$refs["recruitRef"].validate(valid => {

@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="学校id" prop="eduAcademyId">
+      <el-form-item label="院校id" prop="eduAcademyId">
         <el-input
           v-model="queryParams.eduAcademyId"
-          placeholder="请输入学校id"
+          placeholder="请输入院校id"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -51,7 +51,7 @@
     <el-table v-loading="loading" :data="academyAddressList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="eduId" />
-      <el-table-column label="学校" align="center" prop="eduAcademyName" />
+      <el-table-column label="院校" align="center" prop="eduAcademyName" />
       <el-table-column label="国家" align="center" prop="eduCountryName" />
       <el-table-column label="省" align="center" prop="eduProvinceName" />
       <el-table-column label="市" align="center" prop="eduCityName" />
@@ -88,8 +88,8 @@
     <!-- 添加或修改学校地址对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="academyAddressRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="学校id" prop="eduAcademyId">
-          <el-input v-model="form.eduAcademyId" placeholder="请输入学校id" />
+        <el-form-item label="院校id" prop="eduAcademyId">
+          <el-input v-model="form.eduAcademyId" placeholder="请输入院校id" />
         </el-form-item>
         <el-form-item label="详细地址" prop="eduDetailedAddress">
           <el-input v-model="form.eduDetailedAddress" placeholder="请输入详细地址" />
@@ -199,7 +199,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加学校地址";
+  title.value = "添加院校地址";
 }
 
 /** 修改按钮操作 */
@@ -209,7 +209,7 @@ function handleUpdate(row) {
   getAcademyAddress(_eduId).then(response => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改学校地址";
+    title.value = "修改院校地址";
   });
 }
 
@@ -237,7 +237,7 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _eduIds = row.eduId || ids.value;
-  proxy.$modal.confirm('是否确认删除学校地址编号为"' + _eduIds + '"的数据项？').then(function() {
+  proxy.$modal.confirm('是否确认删除院校地址编号为"' + _eduIds + '"的数据项？').then(function() {
     return delAcademyAddress(_eduIds);
   }).then(() => {
     getList();

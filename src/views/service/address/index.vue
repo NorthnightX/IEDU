@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="公司id" prop="eduCompanyId">
+      <el-form-item label="企业id" prop="eduCompanyId">
         <el-input
           v-model="queryParams.eduCompanyId"
-          placeholder="请输入公司id"
+          placeholder="请输入企业id"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -51,7 +51,7 @@
     <el-table v-loading="loading" :data="addressList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="id" align="center" prop="eduId" />
-      <el-table-column label="公司" align="center" prop="companyName" />
+      <el-table-column label="企业" align="center" prop="companyName" />
       <el-table-column label="国家" align="center" prop="eduCountryName" />
       <el-table-column label="省" align="center" prop="eduProvinceName" />
       <el-table-column label="市" align="center" prop="eduCityName" />
@@ -88,8 +88,8 @@
     <!-- 添加或修改公司地址对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="addressRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="公司id" prop="eduCompanyId">
-          <el-input v-model="form.eduCompanyId" placeholder="请输入公司id" />
+        <el-form-item label="企业id" prop="eduCompanyId">
+          <el-input v-model="form.eduCompanyId" placeholder="请输入企业id" />
         </el-form-item>
         <el-form-item label="详细地址" prop="eduDetailedAddress">
           <el-input v-model="form.eduDetailedAddress" placeholder="请输入详细地址" />
@@ -207,7 +207,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加公司地址";
+  title.value = "添加企业地址";
 }
 
 /** 修改按钮操作 */
@@ -217,7 +217,7 @@ function handleUpdate(row) {
   getAddress(_eduId).then(response => {
     form.value = response.data;
     open.value = true;
-    title.value = "修改公司地址";
+    title.value = "修改企业地址";
   });
 }
 

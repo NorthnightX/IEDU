@@ -42,3 +42,16 @@ export function delAcademy(eduId) {
     method: 'delete'
   })
 }
+export function listUAcademy(query) {
+  return request({
+    url: '/service/academy/u/list',
+    method: 'get',
+    params: query
+  })
+}
+export function getAcademyDetail(id){
+  return request({
+    url: '/service/academy/u/detail/' + id,
+    method: 'get'
+  })
+}

@@ -3,11 +3,11 @@ import top from "../../components/header/header.vue"
 import Bottom from "@/components/bottom/bottom.vue";
 import {ref} from "vue";
 import useUserStore from "@/store/modules/user.js";
-import {updateUserProfile, updateUserPwd, uploadAvatar} from "@/api/system/user.js";
+import {updateUserProfile, updateUserPwd} from "@/api/system/user.js";
 import UserAvatar from "@/views/system/user/profile/userAvatar.vue";
 import {EditPen} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
-const info = ref("")
+const info = ref()
 const userStore = useUserStore();
 const newPassword = ref("")
 const oldPassword = ref("")
@@ -16,6 +16,8 @@ const userForm = ref({
   nickName: '',
   email: '',
   phonenumber: '',
+  userName: '',
+
 })
 function getInfo() {
   userStore.getInfo().then((res) => {
@@ -75,18 +77,18 @@ getInfo()
             <div>
               <div style="width: 50%;display: flex;justify-content: space-between">
                 <div style="width: 50%;display: flex;;justify-content: left">
-                  <el-text>账号：{{ info.userName }}</el-text>
+                  <el-text>账号：{{ userForm.userName }}</el-text>
                 </div>
                 <div style="width: 50%;display: flex;;justify-content: left">
-                  <el-text>昵称：{{ info.nickName }}</el-text>
+                  <el-text>昵称：{{ userForm.nickName }}</el-text>
                 </div>
               </div>
               <div style="width: 50%;margin-top: 20px;display: flex;justify-content: space-between">
+<!--                <div style="width: 50%;display: flex;;justify-content: left">-->
+<!--                  <el-text>用户类型：{{ userForm.roles[0].roleName }}</el-text>-->
+<!--                </div>-->
                 <div style="width: 50%;display: flex;;justify-content: left">
-                  <el-text>用户类型：{{ info.remark }}</el-text>
-                </div>
-                <div style="width: 50%;display: flex;;justify-content: left">
-                  <el-text>入站时间：{{ info.createTime }}</el-text>
+                  <el-text>入站时间：{{ userForm.createTime }}</el-text>
                 </div>
               </div>
             </div>

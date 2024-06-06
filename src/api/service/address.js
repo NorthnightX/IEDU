@@ -54,3 +54,4 @@ export function getAddressVOAsListByCompany(companyId) {
     method: 'get'
   })
 }
+
